@@ -94,7 +94,21 @@ public class PlayerController : MonoBehaviour
 
         if (ShipRoot == null)
         {
-            return;
+            var shipComponent = transform.Find("Model").GetComponentInChildren<ShipComponent>();
+            if(shipComponent != null)
+            {
+                var saftey = 1000;
+                while(shipComponent.Parent != null)
+                {
+                    shipComponent = (ShipComponent)shipComponent.Parent;
+                    saftey--;
+                    if (saftey < 0) break;
+                }
+
+                ShipRoot = shipComponent;
+            }
+
+            if (ShipRoot == null) return;
         }
 
         var nodeList = Maths.CreateTreeNodeList(ShipRoot);

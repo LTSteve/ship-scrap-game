@@ -216,6 +216,7 @@ MonoBehaviour:
   Player: {fileID: 0}
   Mass: 1
   Price: 10
+  prefabLocation: ShipParts/thruster
   Thrust: 400
   EnergyConsumption: 0.75
   thrustIndicator: {fileID: 5279901358348821712}

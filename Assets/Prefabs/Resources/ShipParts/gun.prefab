@@ -544,6 +544,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
   Mass: 1
+  Price: 10
+  prefabLocation: ShipParts/gun
   Damage: 2
   EnergyConsumption: 2
   crosshairs: {fileID: 8364000809246387581}

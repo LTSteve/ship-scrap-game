@@ -51,7 +51,7 @@ public class FixedLaserGun : ShipComponent
 
         lineRenderer.SetPosition(0, gunTip.position);
         lineRenderer.SetPosition(1, crosshairs.position);
-        
+
         //todo test for collisions and damage
     }
 }

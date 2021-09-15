@@ -4,6 +4,9 @@ using UnityEngine;
 
 public interface ITreeNode
 {
-    public ITreeNode Parent { get; set; }
-    public List<ITreeNode> Children { get; set; }
+    public ShipComponent GetParent();
+    public void SetParent(ShipComponent parent);
+    public List<ShipComponent> GetChildren();
+    public void SetChildren(List<ShipComponent> children);
+    public string GetTreeAddress();
 }

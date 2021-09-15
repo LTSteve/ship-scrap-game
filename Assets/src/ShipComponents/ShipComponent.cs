@@ -7,14 +7,21 @@ public class ShipComponent : MonoBehaviour, ITreeNode
     private Transform buildPoints;
 
     //Tree Properties
-    public ITreeNode Parent { get; set; }
-    public List<ITreeNode> Children { get; set; } = new List<ITreeNode>();
+    [SerializeField]
+    private ShipComponent parent;
+    [SerializeField]
+    public List<ShipComponent> children = new List<ShipComponent>();
+
+    public ShipComponent Parent { get { return parent; } set { parent = value; } }
+    public List<ShipComponent> Children { get { return children; } set { children = value; } }
 
     [HideInInspector]
     public PlayerController Player;
 
     public float Mass = 1f;
     public int Price = 10;
+    [SerializeField]
+    protected string prefabLocation = "ShipParts/structural block";
 
     private Transform scrapPrefab;
 
@@ -107,8 +114,66 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         return Player;
     }
 
+    public virtual void LoadPropertiesFromModel(ShipComponentModel model)
+    {
+        prefabLocation = model.PrefabLocation;
+
+        transform.localPosition = model.Offset;
+        transform.localRotation = model.Rotation;
+    }
+
+    public virtual ShipComponentModel SavePropertiesToModel()
+    {
+        var model = new ShipComponentModel();
+
+        model.PrefabLocation = prefabLocation;
+
+        model.Offset = transform.localPosition;
+        model.Rotation = transform.localRotation;
+
+        return model;
+    }
+
+    public string GetTreeAddress()
+    {
+        var workingAddress = "";
+
+        var workingParent = Parent;
+
+        var workingChild = this;
+
+        while(workingParent != null)
+        {
+            workingAddress = "" + workingParent.Children.IndexOf(workingChild) + workingAddress;
+            workingChild = workingParent;
+            workingParent = workingParent.Parent;
+        }
+
+        return workingAddress;
+    }
+
     private void _spawnScrap(float velocity, int value)
     {
         Instantiate(scrapPrefab, transform.position, Quaternion.identity);
+    }
+
+    public ShipComponent GetParent()
+    {
+        return Parent;
+    }
+
+    public void SetParent(ShipComponent parent)
+    {
+        Parent = parent;
+    }
+
+    public List<ShipComponent> GetChildren()
+    {
+        return Children;
+    }
+
+    public void SetChildren(List<ShipComponent> children)
+    {
+        Children = children;
     }
 }
