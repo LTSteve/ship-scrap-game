@@ -13,8 +13,9 @@ public class Gyrostabilizer : ShipComponent
     private float pitchIn;
     private float rollIn;
     private float yawIn;
+    private bool gyrosActive;
 
-    private Rigidbody playerRigidBody;
+    private Rigidbody shipRigidBody;
     private ShipState shipState;
 
     public override void ApplyShipStats(ShipState shipState)
@@ -23,14 +24,20 @@ public class Gyrostabilizer : ShipComponent
 
         this.shipState = shipState;
 
-        playerRigidBody = MyShip.GetComponent<Rigidbody>();
+        shipRigidBody = MyShip.GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-        pitchIn = Input.GetAxisRaw("Pitch");
-        rollIn = Input.GetAxisRaw("Roll");
-        yawIn = Input.GetAxisRaw("Yaw");
+        if (MyShip == null) return;
+
+        var inputs = MyShip.InputState;
+
+        pitchIn = inputs.Pitch;
+        rollIn = inputs.Roll;
+        yawIn = inputs.Yaw;
+
+        gyrosActive = inputs.GyrosActive;
     }
 
     private void FixedUpdate()
@@ -52,15 +59,15 @@ public class Gyrostabilizer : ShipComponent
 
         shipState.CurrentPower -= energyCapacityUsed;
 
-        playerRigidBody.AddRelativeTorque(torqueTarget * Time.fixedDeltaTime, ForceMode.Force);
+        shipRigidBody.AddRelativeTorque(torqueTarget * Time.fixedDeltaTime, ForceMode.Force);
     }
 
     private Vector3 _generateStabilizationAngularVelocity()
     {
 
-        if (!MyShip.GyrosActive) return Vector3.zero;
+        if (!gyrosActive) return Vector3.zero;
 
-        var currentAngularVelocity = playerRigidBody.transform.InverseTransformDirection(playerRigidBody.angularVelocity).normalized * playerRigidBody.angularVelocity.magnitude;
+        var currentAngularVelocity = shipRigidBody.transform.InverseTransformDirection(shipRigidBody.angularVelocity).normalized * shipRigidBody.angularVelocity.magnitude;
 
         var counterRotation = Vector3.zero;
 

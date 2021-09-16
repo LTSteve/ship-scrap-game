@@ -32,7 +32,9 @@ public class FixedLaserGun : ShipComponent
 
     private void Update()
     {
-        firing = Input.GetButton("Fire2"); //joystick 'b' rn
+        if (MyShip == null) return;
+
+        firing = MyShip.InputState.Fire1; //joystick 'b' rn
     }
 
     private void FixedUpdate()
@@ -53,6 +55,17 @@ public class FixedLaserGun : ShipComponent
         lineRenderer.SetPosition(0, gunTip.position);
         lineRenderer.SetPosition(1, crosshairs.position);
 
+
+        var direction = (crosshairs.position - gunTip.position);
+
+        var layerMask = new LayerMask() | ( 1 << LayerMask.NameToLayer("ShipPart"));
+
         //todo test for collisions and damage
+        if(Physics.Raycast(new Ray(gunTip.position, direction.normalized), out var raycastHit, direction.magnitude, layerMask)) //layer 6 is shippart
+        {
+            var shipPart = raycastHit.collider.transform.parent.GetComponent<ShipComponent>();
+
+            shipPart.DrainHealth(Damage * Time.deltaTime);
+        }
     }
 }

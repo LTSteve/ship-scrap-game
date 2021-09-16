@@ -132,7 +132,9 @@ public class BuildTool : ITool
         GhostPart.transform.rotation *= Quaternion.Euler(0, 0, 90f * rotationIndex);
 
         //assign material based on collision
-        if (Physics.CheckBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation))
+
+        var collisions = Physics.OverlapBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation);
+        if (collisions != null && collisions.Length > 0)
         {
             _setCurrentPartMaterial(BuildInProgressFail);
         }

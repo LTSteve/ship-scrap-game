@@ -11,20 +11,26 @@ public class PlayerController : Ship
 
     private int Scrap = 0;
 
-    private bool initialCrosshairsSpawnBecauseSomethingIsWack = false;
-
     protected override void Update()
     {
         if (!control) return;
-
-        if (!initialCrosshairsSpawnBecauseSomethingIsWack) _toggleCrosshairs(true);
 
         base.Update();
 
         if(Input.GetButtonDown("Toggle Gyro"))
         {
-            GyrosActive = !GyrosActive;
+            InputState.GyrosActive = !InputState.GyrosActive;
         }
+
+        InputState.Pitch = Input.GetAxisRaw("Pitch");
+        InputState.Roll = Input.GetAxisRaw("Roll");
+        InputState.Yaw = Input.GetAxisRaw("Yaw");
+
+        InputState.Thrust = Input.GetAxisRaw("Thrust");
+        InputState.VerticalThrust = Input.GetAxisRaw("Vertical Thrust");
+        InputState.HorizontalThrust = Input.GetAxisRaw("Horizontal Thrust");
+
+        InputState.Fire1 = Input.GetButton("Fire2"); //joystick 'b' rn
 
         PowerMeter.Instance.SetState(myState.MaxPower == 0 ? 0f : (myState.CurrentPower / myState.MaxPower));
     }
@@ -63,7 +69,7 @@ public class PlayerController : Ship
             PowerMeter.Instance.Activate();
 
             //turn on gun crosshairs
-            initialCrosshairsSpawnBecauseSomethingIsWack = false;
+            _toggleCrosshairs(true);
         }
         else
         {
@@ -90,7 +96,6 @@ public class PlayerController : Ship
                     c.gameObject.SetActive(value);
                 }
             }
-            initialCrosshairsSpawnBecauseSomethingIsWack = true;
         }
 
     }

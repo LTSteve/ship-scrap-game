@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class ShipComponent : MonoBehaviour, ITreeNode
 {
@@ -15,11 +16,14 @@ public class ShipComponent : MonoBehaviour, ITreeNode
     public ShipComponent Parent { get { return parent; } set { parent = value; } }
     public List<ShipComponent> Children { get { return children; } set { children = value; } }
 
-    [HideInInspector]
     public Ship MyShip;
 
     public float Mass = 1f;
     public int Price = 10;
+    public float Health = 1f;
+
+    private float currentHealth;
+
     [SerializeField]
     protected string prefabLocation = "ShipParts/structural block";
 
@@ -27,6 +31,8 @@ public class ShipComponent : MonoBehaviour, ITreeNode
 
     private void Awake()
     {
+        currentHealth = Health;
+
         buildPoints = transform.Find("connectionpoints");
         scrapPrefab = (Transform)Resources.Load("Scrap", typeof(Transform));
     }
@@ -36,7 +42,7 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         var nearestDistance = float.MaxValue;
         Transform nearest = null;
 
-        foreach(Transform buildPoint in buildPoints)
+        foreach (Transform buildPoint in buildPoints)
         {
             var nextdist = Vector3.Distance(buildPoint.position, point);
             if (nextdist < nearestDistance)
@@ -109,11 +115,6 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         Destroy(this.gameObject);
     }
 
-    public Ship GetShip()
-    {
-        return MyShip;
-    }
-
     public virtual void LoadPropertiesFromModel(ShipComponentModel model)
     {
         prefabLocation = model.PrefabLocation;
@@ -142,7 +143,7 @@ public class ShipComponent : MonoBehaviour, ITreeNode
 
         var workingChild = this;
 
-        while(workingParent != null)
+        while (workingParent != null)
         {
             workingAddress = "" + workingParent.Children.IndexOf(workingChild) + workingAddress;
             workingChild = workingParent;
@@ -175,5 +176,145 @@ public class ShipComponent : MonoBehaviour, ITreeNode
     public void SetChildren(List<ShipComponent> children)
     {
         Children = children;
+    }
+
+    public void DrainHealth(float toDrain)
+    {
+        currentHealth -= toDrain;
+
+        Debug.Log("Loosing Health! " + currentHealth);
+        if (currentHealth <= 0)
+        {
+            _splitShipAtMe();
+        }
+    }
+
+    private void _splitShipAtMe()
+    {
+        var amRoot = parent == null;
+
+        if (!amRoot)
+        {
+            //decouple me from parent
+            parent.children.Remove(this);
+        }
+
+        if (children.Count == 0)
+        {
+            //leaf nodes can simply be removed
+            Explode();
+            return;
+        }
+
+        var resultantWreckage = new List<ITreeNode[]>();
+
+        //if i'm a branch node i need to add my parent's tree to the wreckage
+        if (!amRoot)
+        {
+            resultantWreckage.Add(Maths.CreateTreeNodeList(MyShip.ShipRoot));
+        }
+
+        //add all children's trees to the wreckage
+        for (var i = 0; i < children.Count; i++)
+        {
+            var child = children[i];
+
+            resultantWreckage.Add(Maths.CreateTreeNodeList(child));
+            //deparent my children
+            child.parent = null;
+        }
+
+        //build a list of properties to help decide which wreck is my new ship
+        var shipScores = new List<ShipScore>();
+        for(var i = 0; i < resultantWreckage.Count; i++)
+        {
+            var score = new ShipScore();
+            score.WasRoot = amRoot && i == 0;
+            score.WreckageIndex = i;
+
+            foreach (var part in resultantWreckage[i])
+            {
+                score.PartCount++;
+                if(part is Bridge)
+                {
+                    score.BridgeCount++;
+                }
+            }
+
+            shipScores.Add(score);
+        }
+
+        ITreeNode[] newShip = null;
+
+        //first try to get a wreck with a bridge, prioritizing one that contained the previous root if possible
+        var wrecksWithBridges = shipScores.Where(x => x.BridgeCount > 0);
+        if(wrecksWithBridges.Count() != 0)
+        {
+            if (wrecksWithBridges.Any(x => x.WasRoot))
+            {
+                newShip = resultantWreckage[wrecksWithBridges.First(x => x.WasRoot).WreckageIndex];
+            }
+            else
+            {
+                newShip = resultantWreckage[wrecksWithBridges.OrderBy(x => x.PartCount).First().WreckageIndex];
+            }
+        }
+
+        //next just assign whichever was the root or has the most parts
+        if(newShip == null)
+        {
+            if (amRoot)
+            {
+                newShip = resultantWreckage[shipScores.OrderBy(x => x.PartCount).First().WreckageIndex];
+            }
+            else
+            {
+                newShip = resultantWreckage[shipScores.First(x => x.WasRoot).WreckageIndex];
+            }
+        }
+
+        //finally, remove the new ship parts from the wreckage
+        resultantWreckage.Remove(newShip);
+
+        var wreckagePrefab = (Transform)Resources.Load("Wreckage", typeof(Transform));
+
+        //spawn wrecks with the resultant wreckage parts
+        foreach(var wreckagePartsList in resultantWreckage)
+        {
+            var firstShipComponent = (ShipComponent)wreckagePartsList[0];
+            var newWreckageTransform = Instantiate(wreckagePrefab, firstShipComponent.transform.position, firstShipComponent.transform.rotation);
+            var newWreckage = newWreckageTransform.GetComponent<Wreckage>();
+
+            newWreckage.ShipRoot = firstShipComponent;
+            var newWreckageModel = newWreckage.transform.Find("Model");
+
+            foreach(var part in wreckagePartsList)
+            {
+                var shipComponent = (ShipComponent)part;
+                shipComponent.transform.parent = newWreckageModel;
+                shipComponent.MyShip = newWreckage;
+            }
+
+            //add some force to push the new bits away from eachother
+            newWreckage.GetComponent<Rigidbody>().AddExplosionForce(1f, transform.position, 5f, 0f, ForceMode.Impulse);
+        }
+
+        //set new root
+        var newRoot = (ShipComponent)newShip[0];
+        MyShip.ShipRoot = newRoot;
+
+        //add some force to push the new bits away from eachother
+        MyShip.GetComponent<Rigidbody>().AddExplosionForce(1f, transform.position, 5f, 0f, ForceMode.Impulse);
+
+        //my job here is done
+        Explode(1f, false);
+
+    }
+
+    private class ShipScore{
+        public bool WasRoot;
+        public int PartCount;
+        public int BridgeCount;
+        public int WreckageIndex;
     }
 }

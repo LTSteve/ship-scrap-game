@@ -7,17 +7,29 @@ public abstract class Ship : MonoBehaviour
     [SerializeField]
     public ShipComponent ShipRoot;
 
-    public bool GyrosActive { get; protected set; } = true;
+    public InputState InputState { get; private set; } = new InputState();
 
     protected Rigidbody rigidbody;
     protected ShipState myState;
     protected bool control = false;
 
-    protected virtual void Start()
+    void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
 
+        StartCoroutine(_lateStart());
+    }
+
+    private IEnumerator _lateStart()
+    {
+        yield return null;
+        LateStart();
+    }
+
+    protected virtual void LateStart()
+    {
         ToggleControl();
+
     }
 
     protected virtual void Update()

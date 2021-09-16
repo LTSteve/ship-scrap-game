@@ -69,7 +69,7 @@ public class FixedThruster : ShipComponent
     {
         if (inputToWatch == null) return;
 
-        var input = Input.GetAxisRaw(inputToWatch) * inputDirection;
+        var input = MyShip.InputState.GetThrustByString(inputToWatch) * inputDirection;
 
         inputState = input > 0 ? input : 0f;
     }
