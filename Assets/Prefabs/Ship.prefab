@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 3695554576012367983}
   - component: {fileID: 3695554576012367984}
   - component: {fileID: 3695554576012367985}
+  - component: {fileID: 7224732753699183416}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Untagged
@@ -99,7 +100,30 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
+--- !u!114 &7224732753699183416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3695554576012367982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ed92e6ab9c8cf48ba93a99caa0d7fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BlueprintJSON: '{"Items":[{"PrefabLocation":"ShipParts/structural block","Offset":{"x":0.0,"y":0.0,"z":0.0},"Rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"TreeAddress":""},{"PrefabLocation":"ShipParts/cockpit","Offset":{"x":5.205484967518714e-7,"y":0.0,"z":1.0},"Rotation":{"x":0.0,"y":-5.205484967518714e-7,"z":0.0,"w":-1.0},"TreeAddress":"0"},{"PrefabLocation":"ShipParts/structural
+    block","Offset":{"x":-4.371138828673793e-8,"y":0.0,"z":-1.0},"Rotation":{"x":0.0,"y":-1.0,"z":0.0,"w":4.371138828673793e-8},"TreeAddress":"1"},{"PrefabLocation":"ShipParts/structural
+    block","Offset":{"x":1.0,"y":-3.463893126325057e-14,"z":-1.7881393432617188e-7},"Rotation":{"x":-7.105427357601002e-15,"y":-0.70710688829422,"z":7.105427357601002e-15,"w":-0.7071067690849304},"TreeAddress":"2"},{"PrefabLocation":"ShipParts/structural
+    block","Offset":{"x":-1.0,"y":5.773155492886078e-15,"z":2.9802322387695315e-8},"Rotation":{"x":-7.105427357601002e-15,"y":-0.7071067690849304,"z":-7.105427357601002e-15,"w":0.70710688829422},"TreeAddress":"3"},{"PrefabLocation":"ShipParts/structural
+    block","Offset":{"x":4.3711395392165289e-8,"y":1.0000001192092896,"z":-6.705511168547673e-8},"Rotation":{"x":-0.7071068286895752,"y":3.0908619663705397e-8,"z":-3.090862321641907e-8,"w":0.7071068286895752},"TreeAddress":"4"},{"PrefabLocation":"ShipParts/structural
+    block","Offset":{"x":4.3711395392165289e-8,"y":-1.0,"z":-8.195652867470926e-8},"Rotation":{"x":-0.7071068286895752,"y":-3.090862321641907e-8,"z":-3.0908619663705397e-8,"w":-0.7071068286895752},"TreeAddress":"5"},{"PrefabLocation":"ShipParts/generator","Offset":{"x":-8.742277657347586e-8,"y":1.0,"z":-1.0},"Rotation":{"x":1.4853485059756686e-15,"y":-0.7071068286895752,"z":-0.7071068286895752,"w":6.181723932741079e-8},"TreeAddress":"10"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":-1.7484555314695172e-7,"y":0.0,"z":-2.0},"Rotation":{"x":0.0,"y":1.0,"z":0.0,"w":-8.742277657347586e-8},"TreeAddress":"11"},{"PrefabLocation":"ShipParts/generator","Offset":{"x":-8.742277657347586e-8,"y":-1.0000001192092896,"z":-1.0},"Rotation":{"x":1.3146950840264502e-15,"y":0.7071068286895752,"z":-0.7071068286895752,"w":-6.181723932741079e-8},"TreeAddress":"12"},{"PrefabLocation":"ShipParts/structural
+    block","Offset":{"x":1.0,"y":-1.2789769243681803e-13,"z":-1.000000238418579},"Rotation":{"x":0.0,"y":-0.7071069478988648,"z":7.105427357601002e-15,"w":-0.7071067094802856},"TreeAddress":"13"},{"PrefabLocation":"ShipParts/structural
+    block","Offset":{"x":-1.0000001192092896,"y":-5.684341886080802e-14,"z":-0.9999998807907105},"Rotation":{"x":7.105427357601002e-15,"y":0.7071067094802856,"z":0.0,"w":-0.7071069478988648},"TreeAddress":"14"},{"PrefabLocation":"ShipParts/gun","Offset":{"x":1.0000003576278687,"y":-1.7053025658242404e-13,"z":0.9999998807907105},"Rotation":{"x":0.0,"y":-1.6292067073209183e-7,"z":1.0048591563601838e-14,"w":-1.0},"TreeAddress":"20"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":2.0,"y":-9.97088349385944e-12,"z":-5.904587396798888e-7},"Rotation":{"x":-7.105427357601002e-15,"y":0.7071069478988648,"z":-2.842170943040401e-14,"w":0.7071067094802856},"TreeAddress":"21"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":1.0000001192092896,"y":1.0,"z":-2.0116276289172675e-7},"Rotation":{"x":0.4999999403953552,"y":-0.5000000596046448,"z":-0.5000000596046448,"w":-0.4999999701976776},"TreeAddress":"22"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":0.9999999403953552,"y":-1.0,"z":-1.2666299653574243e-7},"Rotation":{"x":0.4999999403953552,"y":0.5000001192092896,"z":-0.5000001192092896,"w":0.4999999403953552},"TreeAddress":"23"},{"PrefabLocation":"ShipParts/gun","Offset":{"x":-0.9999998211860657,"y":-1.1368683772161603e-13,"z":1.0000001192092896},"Rotation":{"x":0.0,"y":-1.6292067073209183e-7,"z":1.0048591563601838e-14,"w":-1.0},"TreeAddress":"30"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":-2.0,"y":9.870964289004913e-12,"z":1.4342390386445914e-7},"Rotation":{"x":2.842170943040401e-14,"y":0.7071067094802856,"z":-7.105427357601002e-15,"w":-0.7071069478988648},"TreeAddress":"31"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":-0.9999999403953552,"y":1.0,"z":3.7256029372656488e-8},"Rotation":{"x":-0.5000000596046448,"y":-0.49999991059303286,"z":-0.4999999403953552,"w":0.5000000596046448},"TreeAddress":"32"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":-1.0000001192092896,"y":-1.0,"z":8.195347334094549e-8},"Rotation":{"x":-0.5000000596046448,"y":0.4999999403953552,"z":-0.4999999701976776,"w":-0.5000001192092896},"TreeAddress":"33"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":8.742278367890322e-8,"y":1.0000001192092896,"z":0.9999999403953552},"Rotation":{"x":0.0,"y":-4.371138828673793e-8,"z":4.371139183945161e-8,"w":-1.0},"TreeAddress":"40"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":8.742279078433057e-8,"y":-1.0,"z":0.9999999403953552},"Rotation":{"x":0.0,"y":-4.371139183945161e-8,"z":-4.371139183945161e-8,"w":-1.0},"TreeAddress":"50"},{"PrefabLocation":"ShipParts/generator","Offset":{"x":0.9999999403953552,"y":-1.0,"z":-1.000000238418579},"Rotation":{"x":0.49999991059303286,"y":0.5000001192092896,"z":-0.5000001192092896,"w":0.49999988079071047},"TreeAddress":"130"},{"PrefabLocation":"ShipParts/cockpit","Offset":{"x":1.0,"y":1.0,"z":-1.0000007152557374},"Rotation":{"x":0.5000001788139343,"y":-0.5000003576278687,"z":-0.4999998211860657,"w":-0.49999964237213137},"TreeAddress":"131"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":0.999999463558197,"y":-1.1920928955078126e-7,"z":-2.0},"Rotation":{"x":5.684341886080802e-14,"y":1.0,"z":0.0,"w":-2.523275952626136e-7},"TreeAddress":"132"},{"PrefabLocation":"ShipParts/generator","Offset":{"x":-1.000000238418579,"y":-1.0,"z":-1.0},"Rotation":{"x":0.5000001192092896,"y":-0.49999991059303286,"z":0.4999999403953552,"w":0.5000001192092896},"TreeAddress":"140"},{"PrefabLocation":"ShipParts/cockpit","Offset":{"x":-1.0000001192092896,"y":1.0,"z":-0.9999994039535523},"Rotation":{"x":0.49999988079071047,"y":0.49999964237213137,"z":0.5000001192092896,"w":-0.5000003576278687},"TreeAddress":"141"},{"PrefabLocation":"ShipParts/thruster","Offset":{"x":-1.0000004768371583,"y":-1.1920928955078126e-7,"z":-2.000000238418579},"Rotation":{"x":1.1368682416908887e-13,"y":1.0,"z":0.0,"w":-2.523271120935533e-7},"TreeAddress":"142"}]}'
+  RecalculateBlueprint: 0
+  SaveBlueprint: 0
+  shipRoot: {fileID: 0}
 --- !u!1 &3695554576069983434
 GameObject:
   m_ObjectHideFlags: 0

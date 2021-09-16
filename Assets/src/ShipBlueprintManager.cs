@@ -45,7 +45,7 @@ public class ShipBlueprintManager : MonoBehaviour
 
                 shipRoot = _buildShip(blueprint);
 
-                GetComponent<PlayerController>().ShipRoot = shipRoot;
+                GetComponent<Ship>().ShipRoot = shipRoot;
             }
 
             RecalculateBlueprint = false;

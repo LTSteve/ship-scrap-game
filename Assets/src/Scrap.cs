@@ -98,7 +98,7 @@ public class Scrap : MonoBehaviour
             var shipComponent = other.gameObject.GetComponentInParent<ShipComponent>();
             var ship = shipComponent.GetShip();
 
-            if(ship == null)
+            if(ship == null || !(ship is PlayerController))
             {
                 return;
             }

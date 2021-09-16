@@ -23,7 +23,7 @@ public class Gyrostabilizer : ShipComponent
 
         this.shipState = shipState;
 
-        playerRigidBody = Player.GetComponent<Rigidbody>();
+        playerRigidBody = MyShip.GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -35,7 +35,7 @@ public class Gyrostabilizer : ShipComponent
 
     private void FixedUpdate()
     {
-        if (Player == null) return;
+        if (MyShip == null) return;
 
         var targetAngularVelocity = new Vector3(-pitchIn, yawIn, -rollIn);
 
@@ -58,7 +58,7 @@ public class Gyrostabilizer : ShipComponent
     private Vector3 _generateStabilizationAngularVelocity()
     {
 
-        if (!Player.GyrosActive) return Vector3.zero;
+        if (!MyShip.GyrosActive) return Vector3.zero;
 
         var currentAngularVelocity = playerRigidBody.transform.InverseTransformDirection(playerRigidBody.angularVelocity).normalized * playerRigidBody.angularVelocity.magnitude;
 

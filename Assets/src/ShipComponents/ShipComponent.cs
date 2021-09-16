@@ -16,7 +16,7 @@ public class ShipComponent : MonoBehaviour, ITreeNode
     public List<ShipComponent> Children { get { return children; } set { children = value; } }
 
     [HideInInspector]
-    public PlayerController Player;
+    public Ship MyShip;
 
     public float Mass = 1f;
     public int Price = 10;
@@ -109,9 +109,9 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         Destroy(this.gameObject);
     }
 
-    public PlayerController GetShip()
+    public Ship GetShip()
     {
-        return Player;
+        return MyShip;
     }
 
     public virtual void LoadPropertiesFromModel(ShipComponentModel model)

@@ -23,6 +23,7 @@ public class FixedLaserGun : ShipComponent
         this.shipState = shipState;
         lineRenderer = GetComponent<LineRenderer>();
 
+
         foreach (Transform child in crosshairs)
         {
             child.gameObject.layer = 7;//that's the crosshairs layer

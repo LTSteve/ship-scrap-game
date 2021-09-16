@@ -21,7 +21,7 @@ public class FixedThruster : ShipComponent
 
     private float inputState = 0f;
 
-    private Rigidbody playerBody;
+    private Rigidbody shipBody;
 
     public override void ApplyShipStats(ShipState shipState)
     {
@@ -29,7 +29,7 @@ public class FixedThruster : ShipComponent
 
         this.shipState = shipState;
 
-        relativeThrustDirection = Maths.CardinalizeVector(Quaternion.Inverse(Player.ShipRoot.transform.rotation) * thrustIndicator.rotation * Vector3.forward);
+        relativeThrustDirection = Maths.CardinalizeVector(Quaternion.Inverse(MyShip.ShipRoot.transform.rotation) * thrustIndicator.rotation * Vector3.forward);
 
         if (relativeThrustDirection == Vector3.up)
         {
@@ -62,7 +62,7 @@ public class FixedThruster : ShipComponent
             inputDirection = 1;
         }
 
-        playerBody = Player.GetComponent<Rigidbody>();
+        shipBody = MyShip.GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -83,7 +83,7 @@ public class FixedThruster : ShipComponent
         {
             shipState.CurrentPower -= powerDraw;
 
-            playerBody.AddForceAtPosition(playerBody.rotation * -relativeThrustDirection * Thrust * Time.deltaTime, thrustIndicator.position, ForceMode.Force);
+            shipBody.AddForceAtPosition(shipBody.rotation * -relativeThrustDirection * Thrust * Time.deltaTime, thrustIndicator.position, ForceMode.Force);
         }
     }
 }
