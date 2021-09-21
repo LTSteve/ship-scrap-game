@@ -37,6 +37,8 @@ public class Scrap : MonoBehaviour
         var randomGoodColor = Random.Range(0, 2);
         var randomColor = new Color(randomGoodColor == 0 ? 1f : Random.value, randomGoodColor == 1 ? 1f : Random.value, randomGoodColor == 2 ? 1f : Random.value);
         var material = ScrapRenderer.material;
+        material.EnableKeyword("_EMISSION");
+        material.SetColor("_EmissionColor", randomColor);
         material.color = randomColor;
 
         //random scale

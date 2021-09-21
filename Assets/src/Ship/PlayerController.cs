@@ -60,6 +60,9 @@ public class PlayerController : Ship
 
         if(control) 
         {
+            //set my current camera position at an angle
+            CameraPosition.localPosition = new Vector3(0, 3, -7).normalized * GetSize() * 4f;
+
             //grab camera
             SmoothCam.Instance.SetReference(CameraPosition, CameraTarget);
 

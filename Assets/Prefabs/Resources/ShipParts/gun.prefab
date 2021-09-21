@@ -547,6 +547,7 @@ MonoBehaviour:
   MyShip: {fileID: 0}
   Mass: 1
   Price: 10
+  Health: 1
   prefabLocation: ShipParts/gun
   Damage: 2
   EnergyConsumption: 2
@@ -603,16 +604,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.010894775
-        inSlope: 11.953245
-        outSlope: 11.953245
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.3499518
-      - serializedVersion: 3
-        time: 0.0067876913
-        value: 0.33090773
+        value: 0.23090926
         inSlope: -6.778594
         outSlope: -6.778594
         tangentMode: 0
@@ -654,7 +646,7 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 5
     alignment: 0
-    textureMode: 0
+    textureMode: 1
     shadowBias: 0.5
     generateLightingData: 0
   m_UseWorldSpace: 1
