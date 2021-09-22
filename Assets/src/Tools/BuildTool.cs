@@ -70,7 +70,7 @@ public class BuildTool : ITool
             var shipComponent = hitInfo.collider.GetComponentInParent<ShipComponent>();
             var buildPoint = shipComponent.GetNearestBuildPoint(hitInfo.point);
 
-            _placeGhostPart(buildPoint);
+            _placeGhostPart(shipComponent, buildPoint);
         }
         else
         {
@@ -125,22 +125,32 @@ public class BuildTool : ITool
         currentPartMaterials = GhostPart.GetComponentInChildren<MeshRenderer>().materials;
     }
 
-    private void _placeGhostPart(Transform buildPoint)
+    private void _placeGhostPart(ShipComponent parentComponent, Transform buildPoint)
     {
         GhostPart.gameObject.SetActive(true);
-        var otherBuildPoint = GhostPart.GetBuildPoint(connectionPointIndex);
+        var otherBuildPoint = GhostPart.GetBuildPoint(connectionPointIndex); //the build point on our current ghost part
 
-        //these are both kinda dumb, and i still don't fully understand them
-        GhostPart.transform.rotation = buildPoint.rotation * otherBuildPoint.localRotation * Quaternion.Euler(0, 180, 0);
-        GhostPart.transform.position = buildPoint.position + GhostPart.transform.rotation * -new Vector3(-otherBuildPoint.localPosition.x, otherBuildPoint.localPosition.y, otherBuildPoint.localPosition.z);
+        //rotate the ghost part so the build points align (opposite directions)
+        GhostPart.transform.rotation = 
+            buildPoint.rotation //set the point we're building on as the reference rotation
+            * Quaternion.Inverse(otherBuildPoint.localRotation) //turn relative to where my build point is
+            * Quaternion.Euler(180, 0, 0); //then turn 180
 
-        GhostPart.transform.rotation *= Quaternion.Euler(0, 0, 90f * rotationIndex);
+        //rotate the ghost part around the connection axis based on rotation index
+        GhostPart.transform.rotation *= Quaternion.AngleAxis(90f * rotationIndex, Quaternion.Inverse(GhostPart.transform.rotation) * buildPoint.forward);
+
+        //move the ghost part so buildpoint.position == otherbuildpoint.position
+        var shipRelativeBuildPointPosition = buildPoint.position - playerPartContainer.position;
+        var buildPointRelativeGhostPartCenter = GhostPart.transform.position - otherBuildPoint.position;
+        GhostPart.transform.position = playerPartContainer.position + shipRelativeBuildPointPosition + buildPointRelativeGhostPartCenter;
 
         //assign material based on collision & affordability
 
         var player = PlayerController.Instance;
 
-        if (player == null || !player.HasScrap(GhostPart.Price) || Physics.CheckBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation, LayerMask.GetMask(new string[] { "ShipPart" })))
+        var collisions = Physics.OverlapBox(GhostPart.transform.TransformDirection(currentColliderCenter) + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation, LayerMask.GetMask(new string[] { "ShipPart" }));
+
+        if (player == null || !player.HasScrap(GhostPart.Price) || (collisions == null || collisions.Length > 0))
         {
             _setCurrentPartMaterial(BuildInProgressFail);
         }

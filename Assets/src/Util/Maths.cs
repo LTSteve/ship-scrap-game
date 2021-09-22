@@ -14,6 +14,7 @@ public static class Maths
         return input % modulo;
     }
 
+    //No Tests
     public static ITreeNode[] CreateTreeNodeList(ITreeNode root)
     {
         var nodeList = new List<ITreeNode>();
@@ -84,6 +85,21 @@ public static class Maths
 
     public static float ApplyDeadzone(float value, float deadzone)
     {
+        deadzone = Mathf.Abs(deadzone);
+
         return value < -deadzone ? value : (value > deadzone ? value : 0f);
+    }
+
+    public static Vector3 ClampMovementToSphere(Vector3 sphereCenter, float sphereScale, Vector3 startingPosition, Vector3 desiredMovement)
+    {
+        var nextPosition = startingPosition + desiredMovement;
+        var nextDirection = (nextPosition - sphereCenter).normalized;
+
+        return sphereCenter + nextDirection * sphereScale;
+    }
+    
+    public static Vector3 WorldDirectionToLocalDirection(Vector3 worldDirection, Quaternion subjectRotation)
+    {
+        return Quaternion.Inverse(subjectRotation) * worldDirection;
     }
 }

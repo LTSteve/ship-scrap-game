@@ -184,9 +184,9 @@ Material:
     - Color_260d9151be2044409ecced0029f600cb: {r: 0, g: 0.3579356, b: 0.4056604, a: 1}
     - Color_3ce90c1801d2473b8736e07e8d4c0cfa: {r: 1, g: 0, b: 0.95919466, a: 1}
     - Color_4c45c821087f4d50b1e5d473451f9336: {r: 0, g: 0.07363939, b: 1, a: 1}
-    - Color_5a9f9dcb9a634ce09bbc066ff5ecb725: {r: 0, g: 0.22373405, b: 0.31132078, a: 1}
+    - Color_5a9f9dcb9a634ce09bbc066ff5ecb725: {r: 0, g: 0.17405558, b: 0.241, a: 1}
     - Color_6ad846fa5c8a444abd93c30d533e006f: {r: 0, g: 0.021574449, b: 0.3019608, a: 1}
-    - Color_b0446b86068447d3a3a6dc5b449d3099: {r: 0.2924528, g: 0, b: 0.25444075, a: 1}
+    - Color_b0446b86068447d3a3a6dc5b449d3099: {r: 0.234, g: 0, b: 0.20280002, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}

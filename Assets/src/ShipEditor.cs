@@ -170,9 +170,11 @@ public class ShipEditor : MonoBehaviour
         currentZoom = Mathf.Clamp(currentZoom + zoomSpeed * -inOut * ZoomSpeed * Time.deltaTime, minZoom, maxZoom);
 
         //update rotation target
-        var nextPosition = CameraPosition.position + SmoothCam.Instance.transform.rotation * new Vector3(-mouseDrag.x * RotateSpeed * Time.deltaTime, -mouseDrag.y * RotateSpeed * Time.deltaTime, 0);
-        var nextDirection = (nextPosition - CameraTarget.position).normalized;
+        var rotateDist = RotateSpeed * Time.deltaTime;
 
-        CameraPosition.position = CameraTarget.position + nextDirection * currentZoom;
+        //var desiredMovement = SmoothCam.Instance.transform.rotation * new Vector3(-mouseDrag.x, -mouseDrag.y, 0) * rotateDist;
+        var desiredMovement = SmoothCam.Instance.transform.localToWorldMatrix * new Vector3(-mouseDrag.x, -mouseDrag.y, 0) * rotateDist;
+
+        CameraPosition.position = Maths.ClampMovementToSphere(CameraTarget.position, currentZoom, CameraPosition.position, desiredMovement);
     }
 }

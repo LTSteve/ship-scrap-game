@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,12 +17,14 @@ public class PlayerController : Ship
     private void Awake()
     {
         Instance = this;
+        //unit testing, should put this elsewhere maybe
+        //MathsTester.Run();
     }
 
     protected override void LateStart()
     {
         base.LateStart();
-        AddScrap(10);
+        AddScrap(10000);
     }
 
     protected override void Update()
