@@ -4,12 +4,25 @@ using UnityEngine;
 
 public class PlayerController : Ship
 {
+    public static PlayerController Instance;
+
     [SerializeField]
     private Transform CameraPosition;
     [SerializeField]
     private Transform CameraTarget;
 
     private int Scrap = 0;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    protected override void LateStart()
+    {
+        base.LateStart();
+        AddScrap(10);
+    }
 
     protected override void Update()
     {
@@ -52,6 +65,11 @@ public class PlayerController : Ship
         ScrapCounter.Instance.SetScrap(Scrap);
 
         return true;
+    }
+
+    public bool HasScrap(int value)
+    {
+        return Scrap >= value;
     }
 
     public override void ToggleControl()

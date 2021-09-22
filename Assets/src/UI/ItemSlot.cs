@@ -14,20 +14,26 @@ public class ItemSlot : MonoBehaviour
 
     public ITool MyTool;
 
-    [SerializeField]
-    public Vector3 defaultItemPosition = new Vector3(-5f, 40f, -20f);
+    public Transform ItemOffset;
 
     [SerializeField]
-    public Vector3 inflatedItemPosition = new Vector3(-20f, 60f, -40f);
+    public Vector3 defaultItemPosition = new Vector3(0f, 30f, -10f);
+
+    [SerializeField]
+    public Vector3 inflatedItemPosition = new Vector3(0f, 45f, -30f);
+
+    private Transform myCamera;
 
     public void SetModel(Transform Prefab)
     {
-        child = Instantiate(Prefab, transform);
+        myCamera = Camera.main.transform;
+
+        child = Instantiate(Prefab, ItemOffset);
         
         child.transform.GetChild(0).gameObject.layer = gameObject.layer;
 
-        child.localPosition = defaultItemPosition;
-        child.localScale = Vector3.one * 20f;
+        ItemOffset.localPosition = defaultItemPosition;
+        ItemOffset.localScale = Vector3.one * 35f;
         child.rotation = Quaternion.Euler(0f, 45f, 0f);
         defaultItemRotation = child.rotation;
 
@@ -46,11 +52,13 @@ public class ItemSlot : MonoBehaviour
 
     private void Update()
     {
+        var toCamera = Quaternion.identity;// Quaternion.LookRotation((myCamera.position - transform.position).normalized, myCamera.up);
+
         if (selected)
         {
             child.rotation *= Quaternion.Euler(0, 170f * Time.deltaTime, 0);
-            child.localScale = Vector3.Lerp(child.localScale, Vector3.one * 30f, 2f * Time.deltaTime);
-            child.localPosition = inflatedItemPosition;
+            ItemOffset.localScale = Vector3.Lerp(ItemOffset.localScale, Vector3.one * 45f, 2f * Time.deltaTime);
+            ItemOffset.localPosition = toCamera * inflatedItemPosition;
 
             myTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 100f);
             myTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 100f);
@@ -58,8 +66,8 @@ public class ItemSlot : MonoBehaviour
         else
         {
             child.rotation = Quaternion.Lerp(child.rotation, defaultItemRotation, 2f * Time.deltaTime);
-            child.localScale = Vector3.Lerp(child.localScale, Vector3.one * 20f, 2f * Time.deltaTime);
-            child.localPosition = defaultItemPosition;
+            ItemOffset.localScale = Vector3.Lerp(ItemOffset.localScale, Vector3.one * 35f, 2f * Time.deltaTime);
+            ItemOffset.localPosition = toCamera * defaultItemPosition;
 
             myTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 60f);
             myTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 60f);

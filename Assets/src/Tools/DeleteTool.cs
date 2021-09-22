@@ -94,7 +94,7 @@ public class DeleteTool : ITool
         savedMaterials = new Material[nodeList.Length][];
         for(var i = 0; i < savedMaterials.Length; i++)
         {
-            savedMaterials[i] = ((ShipComponent)nodeList[i]).GetComponentInChildren<Renderer>().materials;
+            savedMaterials[i] = ((ShipComponent)nodeList[i]).GetComponentInChildren<MeshRenderer>().materials;
         }
 
         var newMaterials = new Material[savedMaterials.Length];
@@ -105,7 +105,7 @@ public class DeleteTool : ITool
 
         foreach(var previewee in currentlyPreviewing)
         {
-            ((ShipComponent)previewee).GetComponentInChildren<Renderer>().materials = newMaterials;
+            ((ShipComponent)previewee).GetComponentInChildren<MeshRenderer>().materials = newMaterials;
         }
 
     }
@@ -116,7 +116,7 @@ public class DeleteTool : ITool
 
         for(var i = 0; i < toUnHighlight.Length; i++)
         {
-            ((ShipComponent)toUnHighlight[i]).GetComponentInChildren<Renderer>().materials = savedMaterials[i];
+            ((ShipComponent)toUnHighlight[i]).GetComponentInChildren<MeshRenderer>().materials = savedMaterials[i];
         }
     }
 }

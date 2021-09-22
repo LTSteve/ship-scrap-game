@@ -86,7 +86,12 @@ public class BuildTool : ITool
             var buildPoint = shipComponent.GetNearestBuildPoint(hitInfo.point);
 
             //make sure we can build
-            if (Physics.CheckBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation))
+            if (Physics.CheckBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation, LayerMask.GetMask(new string[] { "ShipPart" })))
+            {
+                return;
+            }
+            var player = PlayerController.Instance;
+            if(player == null || !player.PayScrap(GhostPart.Price))
             {
                 return;
             }
@@ -117,7 +122,7 @@ public class BuildTool : ITool
         currentColliderCenter = collider.bounds.center;
         currentColliderExtents = collider.bounds.extents;
         GhostPart.GetComponentInChildren<Collider>().enabled = false;
-        currentPartMaterials = GhostPart.GetComponentInChildren<Renderer>().materials;
+        currentPartMaterials = GhostPart.GetComponentInChildren<MeshRenderer>().materials;
     }
 
     private void _placeGhostPart(Transform buildPoint)
@@ -131,10 +136,11 @@ public class BuildTool : ITool
 
         GhostPart.transform.rotation *= Quaternion.Euler(0, 0, 90f * rotationIndex);
 
-        //assign material based on collision
+        //assign material based on collision & affordability
 
-        var collisions = Physics.OverlapBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation);
-        if (collisions != null && collisions.Length > 0)
+        var player = PlayerController.Instance;
+
+        if (player == null || !player.HasScrap(GhostPart.Price) || Physics.CheckBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation, LayerMask.GetMask(new string[] { "ShipPart" })))
         {
             _setCurrentPartMaterial(BuildInProgressFail);
         }
@@ -146,7 +152,7 @@ public class BuildTool : ITool
 
     private void _setCurrentPartMaterial(Material m)
     {
-        var partRenderer = GhostPart.GetComponentInChildren<Renderer>();
+        var partRenderer = GhostPart.GetComponentInChildren<MeshRenderer>();
         var materialsArray = new Material[partRenderer.materials.Length];
         for (var i = 0; i < partRenderer.materials.Length; i++)
         {
@@ -156,7 +162,7 @@ public class BuildTool : ITool
     }
     private void _setCurrentPartMaterial(Material[] m)
     {
-        var partRenderer = GhostPart.GetComponentInChildren<Renderer>();
+        var partRenderer = GhostPart.GetComponentInChildren<MeshRenderer>();
         partRenderer.materials = m;
     }
 }
