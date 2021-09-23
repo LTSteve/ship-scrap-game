@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class InputState
 {
-    public bool GyrosActive = true;
     public float Pitch;
     public float Roll;
     public float Yaw;
@@ -32,4 +31,5 @@ public class InputState
     }
 
     public bool Fire1;
+    public bool GyrosActive = true;
 }

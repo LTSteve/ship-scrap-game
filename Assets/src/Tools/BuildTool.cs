@@ -53,6 +53,7 @@ public class BuildTool : ITool
 
     public void HandleInputs()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.R))
         {
             rotationIndex++;
@@ -61,6 +62,7 @@ public class BuildTool : ITool
         {
             connectionPointIndex++;
         }
+        */
     }
 
     public void ShowPreview(bool hit, RaycastHit hitInfo)

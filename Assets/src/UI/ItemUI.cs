@@ -65,6 +65,11 @@ public class ItemUI : MonoBehaviour
             count++;
         }
 
+        if(activeTool == null)
+        {
+            return null;
+        }
+
         //make sure we activate the new tool after disabling the old tool
         activeTool.Activate();
         selectedIndex = toolIndex;

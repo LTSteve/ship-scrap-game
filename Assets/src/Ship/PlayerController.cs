@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : Ship
 {
@@ -32,21 +33,6 @@ public class PlayerController : Ship
         if (!control) return;
 
         base.Update();
-
-        if(Input.GetButtonDown("Toggle Gyro"))
-        {
-            InputState.GyrosActive = !InputState.GyrosActive;
-        }
-
-        InputState.Pitch = Input.GetAxisRaw("Pitch");
-        InputState.Roll = Input.GetAxisRaw("Roll");
-        InputState.Yaw = Input.GetAxisRaw("Yaw");
-
-        InputState.Thrust = Input.GetAxisRaw("Thrust");
-        InputState.VerticalThrust = Input.GetAxisRaw("Vertical Thrust");
-        InputState.HorizontalThrust = Input.GetAxisRaw("Horizontal Thrust");
-
-        InputState.Fire1 = Input.GetButton("Fire2"); //joystick 'b' rn
 
         PowerMeter.Instance.SetState(myState.MaxPower == 0 ? 0f : (myState.CurrentPower / myState.MaxPower));
     }

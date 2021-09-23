@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ShipEditor : MonoBehaviour
 {
@@ -44,14 +45,17 @@ public class ShipEditor : MonoBehaviour
     private void _generateItemUITools()
     {
         //Delete Tool
+        /*
         var deleteTool = new DeleteTool(Player);
         ItemUI.Instance.AddToolSlot(deleteTool);
         toolCount++;
+        */
 
         //Re-Root Tool
         //  TODO
 
         //Build Tools
+        /*
         var parts = Resources.LoadAll("ShipParts", typeof(ShipComponent));
         foreach (var p in parts)
         {
@@ -60,107 +64,50 @@ public class ShipEditor : MonoBehaviour
             ItemUI.Instance.AddToolSlot(buildTool);
             toolCount++;
         }
+        */
     }
 
     private void Update()
     {
-        _handleActivation();
-
         if (!active) return;
-
-        _handleCameraControls();
-
-        _handleToolActions();
 
         _moveCamera();
     }
 
-    private void _handleActivation()
+    public void ToggleActivation()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            active = !active;
-            Player.ToggleControl();
+        active = !active;
+        Player.ToggleControl();
 
-            if (active)
-            {
-                //grab camera
-                SmoothCam.Instance.SetReference(CameraPosition, CameraTarget, false, true);
+        if (active)
+        {
+            //grab camera
+            SmoothCam.Instance.SetReference(CameraPosition, CameraTarget, false, true);
                 
-                //set camera bounds & location
-                minZoom = Player.GetSize();
-                maxZoom = minZoom * 5f;
+            //set camera bounds & location
+            minZoom = Player.GetSize();
+            maxZoom = minZoom * 5f;
 
-                currentZoom = minZoom * 3f;
-                CameraPosition.position = Player.transform.position + (Vector3.one.normalized * currentZoom);
+            currentZoom = minZoom * 3f;
+            CameraPosition.position = Player.transform.position + (Vector3.one.normalized * currentZoom);
 
-                ItemUI.Instance.SetItemUIOpen(true);
-                CurrentTool = ItemUI.Instance.ChangeSelectedItem(toolIndex);
-            }
-            else
-            {
-                inOut = 0;
-                mouseDrag = Vector2.zero;
-                if(CurrentTool != null)
-                {
-                    CurrentTool.Deactivate();
-                }
-                ItemUI.Instance.SetItemUIOpen(false);
-                toolIndex = 0;
-            }
-
-            //toggle crosshairs
-            ForwardPoint.gameObject.SetActive(active);
-        }
-    }
-
-    private void _handleToolActions()
-    {
-        CurrentTool = ItemUI.Instance.ChangeSelectedItem(toolIndex);
-
-        CurrentTool.HandleInputs();
-
-        var hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hitInfo);
-
-        CurrentTool.ShowPreview(hit, hitInfo);
-
-        if(Input.GetMouseButtonDown(0))
-        {
-            CurrentTool.Use(hit, hitInfo);
-        }
-    }
-
-    private void _handleCameraControls()
-    {
-        inOut = 0;
-        if (Input.GetKey(KeyCode.W))
-        {
-            inOut += 1;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            inOut -= 1;
-        }
-
-        //mouse scroll wheel
-        var partChange = (int)Input.mouseScrollDelta.y;
-        if(toolCount == 0)
-        {
-            Debug.LogError("No Tools!");
-            return;
-        }
-        toolIndex = Maths.RollingModulo(toolIndex + partChange, toolCount);
-
-        //dragging right click for rotate
-        if (Input.GetMouseButton(1))
-        {
-            mouseDrag = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            ItemUI.Instance.SetItemUIOpen(true);
+            CurrentTool = ItemUI.Instance.ChangeSelectedItem(toolIndex);
         }
         else
         {
-            mouseDrag = Vector2.Lerp(mouseDrag, Vector2.zero, 7f * Time.deltaTime);
-            //the smoothcam stop code can catch the tail of this lerp
+            inOut = 0;
+            mouseDrag = Vector2.zero;
+            if(CurrentTool != null)
+            {
+                CurrentTool.Deactivate();
+            }
+            ItemUI.Instance.SetItemUIOpen(false);
+            toolIndex = 0;
         }
+
+        //toggle crosshairs
+        ForwardPoint.gameObject.SetActive(active);
     }
 
     private void _moveCamera()

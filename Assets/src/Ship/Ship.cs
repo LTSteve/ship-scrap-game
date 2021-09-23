@@ -29,7 +29,6 @@ public abstract class Ship : MonoBehaviour
     protected virtual void LateStart()
     {
         ToggleControl();
-
     }
 
     protected virtual void Update()
