@@ -21,8 +21,8 @@ public class ShipEditor : MonoBehaviour
 
     private bool active = false;
 
-    private int inOut = 0;
-    private Vector2 mouseDrag = Vector2.zero;
+    private bool zooming = false;
+    public Vector2 MoveTarget = Vector2.zero;
 
     private float minZoom = 1f;
     private float maxZoom = 10f;
@@ -34,16 +34,60 @@ public class ShipEditor : MonoBehaviour
     private int toolIndex = 0;
     private ITool CurrentTool;
 
+    [SerializeField]
+    private Transform shipBuilderUI;
+
     private void Start()
     {
         CameraTarget = Player.transform;
-
-        //build the itemUI & load all parts
-        _generateItemUITools();
     }
 
-    private void _generateItemUITools()
+    private void Update()
     {
+        if (!active) return;
+
+        _moveCamera();
+    }
+
+    public void ToggleZoom(bool active)
+    {
+        zooming = active;
+    }
+
+    public bool ToggleActivation()
+    {
+        active = !active;
+        Player.ToggleControl();
+
+        if (active)
+        {
+            //grab camera
+            SmoothCam.Instance.SetReference(CameraPosition, CameraTarget, false, true);
+                
+            //set camera bounds & location
+            minZoom = Player.GetSize();
+            maxZoom = minZoom * 5f;
+
+            currentZoom = minZoom * 3f;
+            CameraPosition.position = Player.transform.position + (Vector3.one.normalized * currentZoom);
+        }
+        else
+        {
+            zooming = false;
+            MoveTarget = Vector2.zero;
+        }
+
+        _initializeUI(active);
+
+        //toggle crosshairs
+        ForwardPoint.gameObject.SetActive(active);
+
+        return active;
+    }
+
+    private void _initializeUI(bool active)
+    {
+        shipBuilderUI.gameObject.SetActive(active);
         //Delete Tool
         /*
         var deleteTool = new DeleteTool(Player);
@@ -67,60 +111,18 @@ public class ShipEditor : MonoBehaviour
         */
     }
 
-    private void Update()
-    {
-        if (!active) return;
-
-        _moveCamera();
-    }
-
-    public void ToggleActivation()
-    {
-        active = !active;
-        Player.ToggleControl();
-
-        if (active)
-        {
-            //grab camera
-            SmoothCam.Instance.SetReference(CameraPosition, CameraTarget, false, true);
-                
-            //set camera bounds & location
-            minZoom = Player.GetSize();
-            maxZoom = minZoom * 5f;
-
-            currentZoom = minZoom * 3f;
-            CameraPosition.position = Player.transform.position + (Vector3.one.normalized * currentZoom);
-
-            ItemUI.Instance.SetItemUIOpen(true);
-            CurrentTool = ItemUI.Instance.ChangeSelectedItem(toolIndex);
-        }
-        else
-        {
-            inOut = 0;
-            mouseDrag = Vector2.zero;
-            if(CurrentTool != null)
-            {
-                CurrentTool.Deactivate();
-            }
-            ItemUI.Instance.SetItemUIOpen(false);
-            toolIndex = 0;
-        }
-
-        //toggle crosshairs
-        ForwardPoint.gameObject.SetActive(active);
-    }
-
     private void _moveCamera()
     {
         var zoomSpeed = (maxZoom - minZoom) / 5f;
 
-        currentZoom = Mathf.Clamp(currentZoom + zoomSpeed * -inOut * ZoomSpeed * Time.deltaTime, minZoom, maxZoom);
+        var inOut = zooming ? (-MoveTarget.y) : 0f;
+
+        currentZoom = Mathf.Clamp(currentZoom + zoomSpeed * inOut * ZoomSpeed * Time.deltaTime, minZoom, maxZoom);
 
         //update rotation target
         var rotateDist = RotateSpeed * Time.deltaTime;
 
-        //var desiredMovement = SmoothCam.Instance.transform.rotation * new Vector3(-mouseDrag.x, -mouseDrag.y, 0) * rotateDist;
-        var desiredMovement = SmoothCam.Instance.transform.localToWorldMatrix * new Vector3(-mouseDrag.x, -mouseDrag.y, 0) * rotateDist;
+        var desiredMovement = SmoothCam.Instance.transform.localToWorldMatrix * (zooming ? Vector3.zero : (Vector3)MoveTarget) * rotateDist;
 
         CameraPosition.position = Maths.ClampMovementToSphere(CameraTarget.position, currentZoom, CameraPosition.position, desiredMovement);
     }
