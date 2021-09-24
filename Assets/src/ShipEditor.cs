@@ -70,6 +70,9 @@ public class ShipEditor : MonoBehaviour
 
             currentZoom = minZoom * 3f;
             CameraPosition.position = Player.transform.position + (Vector3.one.normalized * currentZoom);
+
+            //push notification
+            NotificationScroller.Instance.PushNotification("Edit Mode");
         }
         else
         {
