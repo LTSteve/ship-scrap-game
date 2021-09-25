@@ -19,13 +19,11 @@ public class BuildCategoryPanel : MonoBehaviour
 
     public float MoveRate = 600f;
 
-    private float moveTarget = 0;
-    private bool willActivate = false;
-    private float gottaWait = 0f;
+    private RectTransform rectTransform;
 
     private void Start()
     {
-        moveTarget = transform.localPosition.x;
+        rectTransform = GetComponent<RectTransform>();
 
         var parts = Resources.LoadAll(shipPartSubdirectory, typeof(ShipComponent));
         foreach (var p in parts)
@@ -35,49 +33,14 @@ public class BuildCategoryPanel : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if(gottaWait > 0f)
-        {
-            gottaWait -= Time.deltaTime;
-        }
-
-        if (moveTarget == transform.localPosition.x && gottaWait <= 0f)
-        {
-            if (willActivate)
-            {
-                content.gameObject.SetActive(true);
-                willActivate = false;
-            }
-            return;
-        }
-
-        var move = MoveRate * Time.deltaTime;
-
-        var nextMove = 0f;
-
-        if (Mathf.Abs((transform.localPosition.x - moveTarget)) <= move)
-        {
-            nextMove = moveTarget;
-        }
-        else
-        {
-            nextMove = transform.localPosition.x + Mathf.Sign(moveTarget - transform.localPosition.x) * move;
-        }
-
-        transform.localPosition = new Vector3(nextMove, transform.localPosition.y, transform.localPosition.z);
-    }
-
     public void MoveToAndActivate(float x, bool active)
     {
-        moveTarget = x;
-        willActivate = active;
-        content.gameObject.SetActive(false);
-
-        if(moveTarget == transform.localPosition.x)
+        ThingSlider.DoMeASlide(rectTransform, rectTransform.anchoredPosition, new Vector2(x, rectTransform.anchoredPosition.y), MoveRate, () =>
         {
-            gottaWait = 0.4f;
-        }
+            content.gameObject.SetActive(active);
+        });
+
+        content.gameObject.SetActive(false);
     }
 
     private void _addToolSlot(ITool newTool)

@@ -18,8 +18,10 @@ public class ToolSelector : MonoBehaviour
     [SerializeField]
     private Image DpadImage;
 
-    //private List<ToolUI> tools;
-    private int currentTool;
+    [SerializeField]
+    private List<AbstractToolView> tools;
+
+    private int currentTool = 4; //4 = no tool
 
     public void SetSelectedTool(int tool)
     {
@@ -30,25 +32,14 @@ public class ToolSelector : MonoBehaviour
 
         DpadImage.sprite = Dpads[tool];
 
-        //tools[currentTool]?.Deactivate();
-        if (tool != 4)
-        {
-            //tools[currentTool] = tools[tool];
-            //tools[currentTool].Activate();
-        }
+        if(currentTool < 4)
+            tools[currentTool]?.Disable();
 
         currentTool = tool;
-    }
 
-    /*
-    public void RegisterTool(int index, ToolUI tool)
-    {
-        while(tools.Count < index)
+        if (tool != 4)
         {
-            tools.Add(tool);
+            tools[currentTool]?.Enable();
         }
-
-        tools[index] = tool;
     }
-    */
 }

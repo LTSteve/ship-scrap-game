@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildToolView : MonoBehaviour
+public class BuildToolView : AbstractToolView
 {
     public static BuildToolView Instance;
 
@@ -15,13 +15,34 @@ public class BuildToolView : MonoBehaviour
 
     private List<BuildCategoryPanel> panels = new List<BuildCategoryPanel>();
 
+    public float MoveRate = 200f;
+
+    private RectTransform rectTransform;
+
+    [SerializeField]
+    private RectTransform shipView;
+
     private void Start()
     {
+        rectTransform = GetComponent<RectTransform>();
+
         var buildCategoryPanels = transform.GetComponentsInChildren<BuildCategoryPanel>();
         foreach (var panel in buildCategoryPanels)
         {
             panels.Add(panel);
         }
+    }
+
+    public override void Enable()
+    {
+        ThingSlider.DoMeASlide(shipView, shipView.anchoredPosition, shipView.anchoredPosition + new Vector2(0f, 128f), MoveRate);
+        ThingSlider.DoMeASlide(rectTransform, rectTransform.anchoredPosition, new Vector2(rectTransform.anchoredPosition.x, 128f), MoveRate);
+    }
+
+    public override void Disable()
+    {
+        ThingSlider.DoMeASlide(shipView, shipView.anchoredPosition, shipView.anchoredPosition + new Vector2(0f, -128f), MoveRate);
+        ThingSlider.DoMeASlide(rectTransform, rectTransform.anchoredPosition, new Vector2(rectTransform.anchoredPosition.x, -128f), MoveRate);
     }
 
     public void NextItem()
