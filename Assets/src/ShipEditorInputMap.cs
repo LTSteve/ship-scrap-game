@@ -83,4 +83,46 @@ public class ShipEditorInputMap : MonoBehaviour
             ToolSelector.Instance.SetSelectedTool(3);
         }
     }
+
+    private bool rightStick_readyForFlick = true;
+    private float rightStick_deadzone = 0.25f;
+    public void OnRightstickHorizontal(InputAction.CallbackContext value)
+    {
+        if (BuildToolView.Instance == null) return;
+
+        var hValue = Maths.ApplyDeadzone(value.ReadValue<float>(), rightStick_deadzone);
+
+        if(hValue == 0)
+        {
+            rightStick_readyForFlick = true;
+            return;
+        }
+
+        if(rightStick_readyForFlick && hValue > 0)
+        {
+            BuildToolView.Instance.NextItem();
+            rightStick_readyForFlick = false;
+        }
+        
+        if(rightStick_readyForFlick && hValue < 0)
+        {
+            BuildToolView.Instance.PreviousItem();
+            rightStick_readyForFlick = false;
+        }
+    }
+
+    public void OnRB(InputAction.CallbackContext value)
+    {
+        if (value.performed && BuildToolView.Instance != null)
+        {
+            BuildToolView.Instance.NextPanel();
+        }
+    }
+    public void OnLB(InputAction.CallbackContext value)
+    {
+        if (value.performed && BuildToolView.Instance != null)
+        {
+            BuildToolView.Instance.PreviousPanel();
+        }
+    }
 }
