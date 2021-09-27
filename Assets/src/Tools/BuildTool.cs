@@ -2,6 +2,7 @@ using SuperMaxim.Messaging;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class BuildTool : ITool
 {
@@ -15,21 +16,10 @@ public class BuildTool : ITool
     private Transform playerPartContainer;
 
     //build data
-    private List<ShipComponent> partsWithSpareBuildPoints = new List<ShipComponent>();
-    private int buildPointTarget = 0;
     private int connectionPointIndex; //the build point on my new part that i want to connect to the build point target on the parttarget
     private int rotationIndex;
-    private int currentPartTargetIndex;
-    private ShipComponent currentPartTarget { 
-        get {
-            if(partsWithSpareBuildPoints.Count == 0)
-            {
-                return null;
-            }
-
-            return partsWithSpareBuildPoints[Maths.RollingModulo(currentPartTargetIndex, partsWithSpareBuildPoints.Count)];
-        }
-    }
+    private ShipComponent currentPartTarget;
+    private Transform currentBuildPointTarget;
 
     //ghost part swap stuff
     private Material[] currentPartMaterials;
@@ -61,13 +51,13 @@ public class BuildTool : ITool
         //subcribe to events
         Messenger.Default.Subscribe<ShipEditorToolInputPayload>(_onInput);
         Messenger.Default.Subscribe<BuildItemSelectedPayload>(_onNewItemSelected);
-
-        //setup available build point context
-        _updateAvailableBuildPoints();
-        _assignBuildPoint(buildPointTarget);
+        Messenger.Default.Subscribe<ShipEditorAimPayload>(_onBuildPointSelect);
 
         //show UI
         BuildToolView.Instance.Enable();
+
+        //target first part
+        _aquireTarget();
 
         //show Ghostpart
         _showPreview();
@@ -82,6 +72,7 @@ public class BuildTool : ITool
         //unsubscribe from events
         Messenger.Default.Unsubscribe<ShipEditorToolInputPayload>(_onInput);
         Messenger.Default.Unsubscribe<BuildItemSelectedPayload>(_onNewItemSelected);
+        Messenger.Default.Unsubscribe<ShipEditorAimPayload>(_onBuildPointSelect);
 
         //hide UI
         BuildToolView.Instance.Disable();
@@ -96,36 +87,12 @@ public class BuildTool : ITool
         active = false;
     }
 
-    private void _updateAvailableBuildPoints()
-    {
-        var shipTree = Maths.CreateTreeNodeList(PlayerController.Instance.ShipRoot);
-
-        foreach (var node in shipTree)
-        {
-            var component = (ShipComponent)node;
-            if (component.HasFreeBuildPoints())
-            {
-                partsWithSpareBuildPoints.Add(component);
-            }
-        }
-
-        if (partsWithSpareBuildPoints.Count > 0)
-        {
-            currentPartTargetIndex = 0;
-        }
-    }
-
     private void _onInput(ShipEditorToolInputPayload payload)
     {
         switch (payload.InputType)
         {
             case ShipEditorToolInputPayload.ToolInputType.A:
                 Use();
-                _updateAvailableBuildPoints();
-                _showPreview();
-                break;
-            case ShipEditorToolInputPayload.ToolInputType.B:
-                _assignBuildPoint(buildPointTarget + 1);
                 _showPreview();
                 break;
             case ShipEditorToolInputPayload.ToolInputType.X:
@@ -138,10 +105,6 @@ public class BuildTool : ITool
                 break;
             case ShipEditorToolInputPayload.ToolInputType.RightStickClick:
                 //TODO: display part info
-                break;
-            case ShipEditorToolInputPayload.ToolInputType.RTLT:
-                currentPartTargetIndex += (int)((float)payload.InputData);
-                _showPreview();
                 break;
         }
     }
@@ -161,6 +124,37 @@ public class BuildTool : ITool
     }
 
 
+    private void _aquireTarget()
+    {
+        var camTransform = SmoothCam.Instance.TiltOffset;
+
+        var aimPayload = new ShipEditorAimPayload();
+
+        //weird interaction, fix this later
+        var colls = Physics.RaycastAll(camTransform.position, camTransform.forward, LayerMask.GetMask(new string[] { "ShipPart" })).Where(x => x.collider.gameObject.layer == LayerMask.NameToLayer("ShipPart"));
+
+        if (colls.Any())
+        {
+            var hitInfo = colls.Where(x => x.distance == colls.Min(x=>x.distance)).First();
+            var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipComponent>();
+            aimPayload.SelectedComponent = shipComponent;
+            aimPayload.NearestBuildPoint = shipComponent.GetNearestBuildPoint(hitInfo.point);
+        }
+
+        _onBuildPointSelect(aimPayload);
+    }
+
+
+    private void _onBuildPointSelect(ShipEditorAimPayload payload)
+    {
+        currentPartTarget = payload.SelectedComponent;
+        currentBuildPointTarget = payload.NearestBuildPoint;
+
+        _assignBuildPoint(payload.NearestBuildPoint);
+
+        _showPreview();
+    }
+
     private void _showPreview()
     {
         if(GhostPart == null)
@@ -169,20 +163,18 @@ public class BuildTool : ITool
             _buildGhostPart();
         }
 
-        var buildPoint = currentPartTarget.GetBuildPoint(buildPointTarget);
-
-        if(buildPoint == null)
+        if(currentBuildPointTarget == null)
         {
             GhostPart.gameObject.SetActive(false);
         }
-
-        _placeGhostPart(newComponentPrefab, buildPoint);
+        else
+        {
+            _placeGhostPart(newComponentPrefab, currentBuildPointTarget);
+        }
     }
 
     public void Use()
     {
-        var buildPoint = currentPartTarget.GetBuildPoint(buildPointTarget);
-
         //make sure we can build
         if (Physics.CheckBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation, LayerMask.GetMask(new string[] { "ShipPart" })))
         {
@@ -203,7 +195,7 @@ public class BuildTool : ITool
         GhostPart.transform.parent = playerPartContainer;
 
         //place Connector
-        GameObject.Instantiate(PartConnectorPrefab, buildPoint.position, buildPoint.rotation, GhostPart.transform);
+        GameObject.Instantiate(PartConnectorPrefab, currentBuildPointTarget.position, currentBuildPointTarget.rotation, GhostPart.transform);
 
         currentPartTarget.Children.Add(GhostPart);
         GhostPart.Parent = currentPartTarget;
@@ -275,10 +267,9 @@ public class BuildTool : ITool
         partRenderer.materials = m;
     }
 
-    private void _assignBuildPoint(int newBuildPointTarget)
+    private void _assignBuildPoint(Transform newBuildPoint)
     {
-        buildPointTarget = newBuildPointTarget;
-        var position = currentPartTarget.GetBuildPoint(newBuildPointTarget)?.position;
+        var position = newBuildPoint?.position;
         if (!position.HasValue)
         {
             BuildPoint.gameObject.SetActive(false);

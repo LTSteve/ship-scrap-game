@@ -170,19 +170,13 @@ public class ShipEditorInputMap : MonoBehaviour
     {
         var triggerValue = Maths.ApplyDeadzone(value.ReadValue<float>(), trigger_deadzone);
 
-        if (triggerValue > 0)
-        {
-            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.RTLT, InputData = 1f });
-        }
+        Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.RT, InputData = triggerValue });
 
     }
     public void OnLT(InputAction.CallbackContext value)
     {
         var triggerValue = Maths.ApplyDeadzone(value.ReadValue<float>(), trigger_deadzone);
 
-        if (triggerValue > 0)
-        {
-            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.RTLT, InputData = -1f });
-        }
+        Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.LT, InputData = triggerValue });
     }
 }

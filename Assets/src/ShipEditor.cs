@@ -1,7 +1,9 @@
+using SuperMaxim.Messaging;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
 
 public class ShipEditor : MonoBehaviour
 {
@@ -15,6 +17,8 @@ public class ShipEditor : MonoBehaviour
     private float ZoomSpeed = 10f;
     [SerializeField]
     private float RotateSpeed = 100f;
+    [SerializeField]
+    private float TiltSpeed = 30f;
 
     [SerializeField]
     private Transform ForwardPoint;
@@ -22,7 +26,9 @@ public class ShipEditor : MonoBehaviour
     private bool active = false;
 
     private bool zooming = false;
+    private bool aiming = false;
     public Vector2 MoveTarget = Vector2.zero;
+    private Vector2 aimTilt = Vector2.zero;
 
     private float minZoom = 1f;
     private float maxZoom = 10f;
@@ -40,6 +46,8 @@ public class ShipEditor : MonoBehaviour
     private void Start()
     {
         CameraTarget = Player.transform;
+        Messenger.Default.Subscribe<NewShipBuildTargetPayload>(_onTargetPartChange);
+        Messenger.Default.Subscribe<ShipEditorToolInputPayload>(_onInput);
     }
 
     private void Update()
@@ -47,6 +55,14 @@ public class ShipEditor : MonoBehaviour
         if (!active) return;
 
         _moveCamera();
+    }
+
+    private void _onInput(ShipEditorToolInputPayload payload)
+    {
+        if(payload.InputType == ShipEditorToolInputPayload.ToolInputType.RT)
+        {
+            aiming = ((float)payload.InputData) > 0.25f;
+        }
     }
 
     public void ToggleZoom(bool active)
@@ -88,30 +104,23 @@ public class ShipEditor : MonoBehaviour
         return active;
     }
 
+    private void _onTargetPartChange(NewShipBuildTargetPayload payload)
+    {
+        if(payload.Target == null)
+        {
+            CameraTarget = Player.transform;
+        }
+        else
+        {
+            CameraTarget = payload.Target.transform;
+        }
+
+        SmoothCam.Instance.SetReference(CameraPosition, CameraTarget, false, true);
+    }
+
     private void _initializeUI(bool active)
     {
         shipBuilderUI.gameObject.SetActive(active);
-        //Delete Tool
-        /*
-        var deleteTool = new DeleteTool(Player);
-        ItemUI.Instance.AddToolSlot(deleteTool);
-        toolCount++;
-        */
-
-        //Re-Root Tool
-        //  TODO
-
-        //Build Tools
-        /*
-        var parts = Resources.LoadAll("ShipParts", typeof(ShipComponent));
-        foreach (var p in parts)
-        {
-            ShipComponentPrefabDatabase[p.name] = (ShipComponent)p;
-            var buildTool = new BuildTool(100, (ShipComponent)p, Player.transform);
-            ItemUI.Instance.AddToolSlot(buildTool);
-            toolCount++;
-        }
-        */
     }
 
     private void _moveCamera()
@@ -122,11 +131,44 @@ public class ShipEditor : MonoBehaviour
 
         currentZoom = Mathf.Clamp(currentZoom + zoomSpeed * inOut * ZoomSpeed * Time.deltaTime, minZoom, maxZoom);
 
-        //update rotation target
-        var rotateDist = RotateSpeed * Time.deltaTime;
+        if (aiming)
+        {
+            var shipSize = PlayerController.Instance.GetSize() * 2;
 
-        var desiredMovement = SmoothCam.Instance.transform.localToWorldMatrix * (zooming ? Vector3.zero : (Vector3)MoveTarget) * rotateDist;
+            aimTilt += MoveTarget * TiltSpeed * shipSize * Time.deltaTime;
+            aimTilt = new Vector2(Mathf.Clamp(aimTilt.x, -shipSize, shipSize), Mathf.Clamp(aimTilt.y, -shipSize, shipSize));
 
-        CameraPosition.position = Maths.ClampMovementToSphere(CameraTarget.position, currentZoom, CameraPosition.position, desiredMovement);
+            SmoothCam.Instance.Tilt(aimTilt);
+
+            var camTransform = SmoothCam.Instance.TiltOffset;
+
+
+            //weird interaction, fix this later
+            var colls = Physics.RaycastAll(camTransform.position, camTransform.forward, LayerMask.GetMask(new string[] { "ShipPart" })).Where(x=>x.collider.gameObject.layer == LayerMask.NameToLayer("ShipPart"));
+
+            if (colls.Any())
+            {
+                var hitInfo = colls.Where(x => x.distance == colls.Min(x => x.distance)).First();
+                if (hitInfo.collider.transform.parent == null)
+                {
+                    Debug.Log("asdf");
+                }
+                var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipComponent>();
+
+                Messenger.Default.Publish(new ShipEditorAimPayload { SelectedComponent = shipComponent, NearestBuildPoint = shipComponent.GetNearestBuildPoint(hitInfo.point) });
+            }
+        }
+        else
+        {
+            aimTilt = Vector2.zero;
+            SmoothCam.Instance.Tilt(aimTilt);
+
+            //update rotation target
+            var rotateDist = RotateSpeed * Time.deltaTime;
+
+            var desiredMovement = SmoothCam.Instance.transform.localToWorldMatrix * (zooming ? Vector3.zero : (Vector3)MoveTarget) * rotateDist;
+
+            CameraPosition.position = Maths.ClampMovementToSphere(CameraTarget.position, currentZoom, CameraPosition.position, desiredMovement);
+        }
     }
 }

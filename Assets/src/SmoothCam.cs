@@ -13,6 +13,8 @@ public class SmoothCam : MonoBehaviour
     private Transform positionReference;
     private Transform aimReference;
 
+    public Transform TiltOffset;
+
     [SerializeField]
     private float minimumMoveDistance = 0.05f;
     [SerializeField]
@@ -25,6 +27,8 @@ public class SmoothCam : MonoBehaviour
     private bool alignCamToZ = true;
     private bool tightRotation = false;
 
+    private Vector2 tilt = Vector2.zero;
+
     public void SetReference(Transform positionRef, Transform aimRef, bool alignToZ = true, bool tight = false)
     {
         positionReference = positionRef;
@@ -35,6 +39,13 @@ public class SmoothCam : MonoBehaviour
 
         alignCamToZ = alignToZ;
         tightRotation = tight;
+
+        tilt = Vector2.zero;
+    }
+
+    public void Tilt(Vector2 tilt)
+    {
+        this.tilt = tilt;
     }
 
     private void Update()
@@ -71,6 +82,8 @@ public class SmoothCam : MonoBehaviour
         {
             transform.LookAt(aimReference, transform.up);
         }
+
+        TiltOffset.localPosition = new Vector3(tilt.x, tilt.y);
 
         if(!tightRotation)
             transform.rotation = Quaternion.Lerp(quartb4, transform.rotation, rotationRate);

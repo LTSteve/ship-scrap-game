@@ -11,7 +11,8 @@ public class ShipEditorToolInputPayload
         A,
         Y,
         X,
-        RTLT,
+        RT,
+        LT,
         RightStickClick
     }
 

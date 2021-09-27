@@ -6,6 +6,8 @@ public static class Maths
 {
     public static int RollingModulo(int input, int modulo)
     {
+        if (modulo == 0) return 0;
+
         while(input < 0)
         {
             input += modulo;

@@ -61,10 +61,6 @@ public class ShipComponent : MonoBehaviour, ITreeNode
 
         return buildPoints.GetChild(index % buildPoints.childCount);
     }
-    public bool HasFreeBuildPoints()
-    {
-        return true;
-    }
 
     public virtual void ApplyShipStats(ShipState shipState)
     {
