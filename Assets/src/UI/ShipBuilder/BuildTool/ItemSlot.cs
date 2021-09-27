@@ -1,3 +1,4 @@
+using SuperMaxim.Messaging;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,71 +7,40 @@ public class ItemSlot : MonoBehaviour
 {
     private bool selected = false;
 
-    private Transform child;
-
-    private RectTransform myTransform;
-
-    private Quaternion defaultItemRotation;
-
-    public ITool MyTool;
+    private Transform model;
 
     public Transform ItemOffset;
 
-    [SerializeField]
-    public Vector3 defaultItemPosition = new Vector3(0f, 30f, -10f);
+    private Quaternion defaultItemRotation;
 
-    [SerializeField]
-    public Vector3 inflatedItemPosition = new Vector3(0f, 45f, -30f);
+    private ShipComponent component;
 
-    private Transform myCamera;
-
-    public void SetModel(Transform Prefab)
+    public void SetComponent(ShipComponent comp)
     {
-        myCamera = Camera.main.transform;
+        component = comp;
 
-        child = Instantiate(Prefab, ItemOffset);
-        
-        child.transform.GetChild(0).gameObject.layer = gameObject.layer;
+        //instantiate only the model
+        model = Instantiate(comp.transform.Find("modelscale"), ItemOffset);
 
-        ItemOffset.localPosition = defaultItemPosition;
-        ItemOffset.localScale = Vector3.one * 35f;
-        child.rotation = Quaternion.Euler(0f, 45f, 0f);
-        defaultItemRotation = child.rotation;
+        model.transform.GetChild(0).gameObject.layer = gameObject.layer;
 
-        myTransform = GetComponent<RectTransform>();
-    }
-
-    public void SetSelected(bool setTo)
-    {
-        selected = setTo;
-    }
-
-    public bool IsSelected()
-    {
-        return selected;
+        defaultItemRotation = model.rotation;
     }
 
     private void Update()
     {
-        var toCamera = Quaternion.identity;// Quaternion.LookRotation((myCamera.position - transform.position).normalized, myCamera.up);
-
         if (selected)
         {
-            child.rotation *= Quaternion.Euler(0, 170f * Time.deltaTime, 0);
-            ItemOffset.localScale = Vector3.Lerp(ItemOffset.localScale, Vector3.one * 45f, 2f * Time.deltaTime);
-            ItemOffset.localPosition = toCamera * inflatedItemPosition;
-
-            myTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 100f);
-            myTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 100f);
+            model.rotation *= Quaternion.Euler(0, 170f * Time.deltaTime, 0);
         }
         else
         {
-            child.rotation = Quaternion.Lerp(child.rotation, defaultItemRotation, 2f * Time.deltaTime);
-            ItemOffset.localScale = Vector3.Lerp(ItemOffset.localScale, Vector3.one * 35f, 2f * Time.deltaTime);
-            ItemOffset.localPosition = toCamera * defaultItemPosition;
-
-            myTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 60f);
-            myTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 60f);
+            model.rotation = Quaternion.Lerp(model.rotation, defaultItemRotation, 2f * Time.deltaTime);
         }
+    }
+
+    public void Activate()
+    {
+        Messenger.Default.Publish(new BuildItemSelectedPayload { SelectedComponent = component });
     }
 }

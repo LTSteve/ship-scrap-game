@@ -1,125 +1,222 @@
+using SuperMaxim.Messaging;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildTool : ITool
 {
-    public ShipComponent ComponentPrefab;
-
-    private ShipComponent GhostPart;
-
-    private Transform playerPartContainer;
-
-    private Vector3 currentColliderCenter;
-    private Vector3 currentColliderExtents;
-    private Material[] currentPartMaterials;
-
-    private int connectionPointIndex;
-    private int rotationIndex;
-
+    //resources
     private Material BuildInProgressFail;
     private Material BuildInProgressSuccess;
+    private Transform PartConnectorPrefab;
 
-    private Transform PartConnector;
+    //target references
+    private Transform BuildPoint;
+    private Transform playerPartContainer;
 
-    public BuildTool(int cost, ShipComponent componentPrefab, Transform playerTransform)
+    //build data
+    private List<ShipComponent> partsWithSpareBuildPoints = new List<ShipComponent>();
+    private int buildPointTarget = 0;
+    private int connectionPointIndex; //the build point on my new part that i want to connect to the build point target on the parttarget
+    private int rotationIndex;
+    private int currentPartTargetIndex;
+    private ShipComponent currentPartTarget { 
+        get {
+            if(partsWithSpareBuildPoints.Count == 0)
+            {
+                return null;
+            }
+
+            return partsWithSpareBuildPoints[Maths.RollingModulo(currentPartTargetIndex, partsWithSpareBuildPoints.Count)];
+        }
+    }
+
+    //ghost part swap stuff
+    private Material[] currentPartMaterials;
+    private ShipComponent GhostPart;
+    private ShipComponent newComponentPrefab;
+
+    //collisions
+    private Vector3 currentColliderCenter;
+    private Vector3 currentColliderExtents;
+
+    private bool active = false;
+
+    public BuildTool()
     {
-        ComponentPrefab = componentPrefab;
-        this.playerPartContainer = playerTransform.Find("Model");
+        this.playerPartContainer = PlayerController.Instance.transform.Find("Model");
 
         //load resources
         BuildInProgressFail = (Material)Resources.Load("ToolResources/BuildInProgressFail", typeof(Material));
         BuildInProgressSuccess = (Material)Resources.Load("ToolResources/BuildInProgressSuccess", typeof(Material));
-        PartConnector = (Transform)Resources.Load("ToolResources/connection ring", typeof(Transform));
-    }
+        PartConnectorPrefab = (Transform)Resources.Load("ToolResources/connection ring", typeof(Transform));
+        BuildPoint = GameObject.Instantiate((Transform)Resources.Load("ToolResources/BuildPointIndicator", typeof(Transform)));
 
+        BuildPoint.gameObject.SetActive(false);
+    }
     public void Activate()
     {
-        //build new Ghostpart
-        _buildGhostPart();
+        if (active) return;
+
+        //subcribe to events
+        Messenger.Default.Subscribe<ShipEditorToolInputPayload>(_onInput);
+        Messenger.Default.Subscribe<BuildItemSelectedPayload>(_onNewItemSelected);
+
+        //setup available build point context
+        _updateAvailableBuildPoints();
+        _assignBuildPoint(buildPointTarget);
+
+        //show UI
+        BuildToolView.Instance.Enable();
+
+        //show Ghostpart
+        _showPreview();
+
+        active = true;
     }
 
     public void Deactivate()
     {
-        if(GhostPart != null)
+        if (!active) return;
+
+        //unsubscribe from events
+        Messenger.Default.Unsubscribe<ShipEditorToolInputPayload>(_onInput);
+        Messenger.Default.Unsubscribe<BuildItemSelectedPayload>(_onNewItemSelected);
+
+        //hide UI
+        BuildToolView.Instance.Disable();
+        if(BuildPoint != null)
+            BuildPoint.gameObject.SetActive(false);
+
+        //destroy Ghostpart
+        if (GhostPart != null)
             GameObject.Destroy(GhostPart.gameObject);
         GhostPart = null;
+
+        active = false;
     }
 
-    public Transform GetModel()
+    private void _updateAvailableBuildPoints()
     {
-        return ComponentPrefab.transform.Find("modelscale");
+        var shipTree = Maths.CreateTreeNodeList(PlayerController.Instance.ShipRoot);
+
+        foreach (var node in shipTree)
+        {
+            var component = (ShipComponent)node;
+            if (component.HasFreeBuildPoints())
+            {
+                partsWithSpareBuildPoints.Add(component);
+            }
+        }
+
+        if (partsWithSpareBuildPoints.Count > 0)
+        {
+            currentPartTargetIndex = 0;
+        }
     }
 
-    public void HandleInputs()
+    private void _onInput(ShipEditorToolInputPayload payload)
     {
-        /*
-        if (Input.GetKeyDown(KeyCode.R))
+        switch (payload.InputType)
         {
-            rotationIndex++;
+            case ShipEditorToolInputPayload.ToolInputType.A:
+                Use();
+                _updateAvailableBuildPoints();
+                _showPreview();
+                break;
+            case ShipEditorToolInputPayload.ToolInputType.B:
+                _assignBuildPoint(buildPointTarget + 1);
+                _showPreview();
+                break;
+            case ShipEditorToolInputPayload.ToolInputType.X:
+                rotationIndex++;
+                _showPreview();
+                break;
+            case ShipEditorToolInputPayload.ToolInputType.Y:
+                connectionPointIndex++;
+                _showPreview();
+                break;
+            case ShipEditorToolInputPayload.ToolInputType.RightStickClick:
+                //TODO: display part info
+                break;
+            case ShipEditorToolInputPayload.ToolInputType.RTLT:
+                currentPartTargetIndex += (int)((float)payload.InputData);
+                _showPreview();
+                break;
         }
-        else if (Input.GetKeyDown(KeyCode.T))
-        {
-            connectionPointIndex++;
-        }
-        */
     }
 
-    public void ShowPreview(bool hit, RaycastHit hitInfo)
+    private void _onNewItemSelected(BuildItemSelectedPayload payload)
     {
-        if (hit && hitInfo.collider.gameObject.layer == 6) //ship part = 6
-        {
-            var shipComponent = hitInfo.collider.GetComponentInParent<ShipComponent>();
-            var buildPoint = shipComponent.GetNearestBuildPoint(hitInfo.point);
+        newComponentPrefab = payload.SelectedComponent;
 
-            _placeGhostPart(shipComponent, buildPoint);
+        if(GhostPart != null)
+        {
+            GameObject.Destroy(GhostPart.gameObject);
+            GhostPart = null;
         }
-        else
+
+        _buildGhostPart();
+        _showPreview();
+    }
+
+
+    private void _showPreview()
+    {
+        if(GhostPart == null)
+        {
+            //build new Ghostpart
+            _buildGhostPart();
+        }
+
+        var buildPoint = currentPartTarget.GetBuildPoint(buildPointTarget);
+
+        if(buildPoint == null)
         {
             GhostPart.gameObject.SetActive(false);
         }
+
+        _placeGhostPart(newComponentPrefab, buildPoint);
     }
 
-    public void Use(bool hit, RaycastHit hitInfo)
+    public void Use()
     {
-        if (hit && hitInfo.collider.gameObject.layer == 6) //ship part = 6
+        var buildPoint = currentPartTarget.GetBuildPoint(buildPointTarget);
+
+        //make sure we can build
+        if (Physics.CheckBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation, LayerMask.GetMask(new string[] { "ShipPart" })))
         {
-            var shipComponent = hitInfo.collider.GetComponentInParent<ShipComponent>();
-            var buildPoint = shipComponent.GetNearestBuildPoint(hitInfo.point);
-
-            //make sure we can build
-            if (Physics.CheckBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation, LayerMask.GetMask(new string[] { "ShipPart" })))
-            {
-                return;
-            }
-            var player = PlayerController.Instance;
-            if(player == null || !player.PayScrap(GhostPart.Price))
-            {
-                return;
-            }
-
-            //reset GhostPart's materials & collider
-            _setCurrentPartMaterial(currentPartMaterials);
-            //Player.IgnoreCollisionsWithPart(GhostPart);
-            GhostPart.GetComponentInChildren<Collider>().enabled = true;
-
-            //move ghost block into ship structure
-            GhostPart.transform.parent = playerPartContainer;
-
-            //place Connector
-            GameObject.Instantiate(PartConnector, buildPoint.position, buildPoint.rotation, GhostPart.transform);
-
-            shipComponent.Children.Add(GhostPart);
-            GhostPart.Parent = shipComponent;
-
-            //reset GhostPart
-            _buildGhostPart();
+            return;
         }
+        var player = PlayerController.Instance;
+        if (player == null || !player.PayScrap(GhostPart.Price))
+        {
+            return;
+        }
+
+        //reset GhostPart's materials & collider
+        _setCurrentPartMaterial(currentPartMaterials);
+        //Player.IgnoreCollisionsWithPart(GhostPart);
+        GhostPart.GetComponentInChildren<Collider>().enabled = true;
+
+        //move ghost block into ship structure
+        GhostPart.transform.parent = playerPartContainer;
+
+        //place Connector
+        GameObject.Instantiate(PartConnectorPrefab, buildPoint.position, buildPoint.rotation, GhostPart.transform);
+
+        currentPartTarget.Children.Add(GhostPart);
+        GhostPart.Parent = currentPartTarget;
+
+        //reset GhostPart
+        _buildGhostPart();
     }
 
     private void _buildGhostPart()
     {
-        GhostPart = GameObject.Instantiate(ComponentPrefab, playerPartContainer);
+        if (newComponentPrefab == null) return;
+        
+        GhostPart = GameObject.Instantiate(newComponentPrefab, playerPartContainer);
         var collider = GhostPart.GetComponentInChildren<BoxCollider>();
         currentColliderCenter = collider.bounds.center;
         currentColliderExtents = collider.bounds.extents;
@@ -176,5 +273,19 @@ public class BuildTool : ITool
     {
         var partRenderer = GhostPart.GetComponentInChildren<MeshRenderer>();
         partRenderer.materials = m;
+    }
+
+    private void _assignBuildPoint(int newBuildPointTarget)
+    {
+        buildPointTarget = newBuildPointTarget;
+        var position = currentPartTarget.GetBuildPoint(newBuildPointTarget)?.position;
+        if (!position.HasValue)
+        {
+            BuildPoint.gameObject.SetActive(false);
+            return;
+        }
+
+        BuildPoint.position = position.Value;
+        BuildPoint.gameObject.SetActive(true);
     }
 }

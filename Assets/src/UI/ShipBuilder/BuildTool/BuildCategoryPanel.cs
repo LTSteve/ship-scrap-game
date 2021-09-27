@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SuperMaxim.Messaging;
 
 public class BuildCategoryPanel : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class BuildCategoryPanel : MonoBehaviour
 
     private RectTransform rectTransform;
 
+    [SerializeField]
+    private RectTransform highlightSprite;
+
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -28,8 +32,9 @@ public class BuildCategoryPanel : MonoBehaviour
         var parts = Resources.LoadAll(shipPartSubdirectory, typeof(ShipComponent));
         foreach (var p in parts)
         {
-            var buildTool = new BuildTool(100, (ShipComponent)p, PlayerController.Instance.transform);
-            _addToolSlot(buildTool);
+            var newSlot = Instantiate(ItemSlotPrefab, content);
+
+            newSlot.SetComponent(((ShipComponent)p));
         }
     }
 
@@ -37,51 +42,52 @@ public class BuildCategoryPanel : MonoBehaviour
     {
         ThingSlider.DoMeASlide(rectTransform, rectTransform.anchoredPosition, new Vector2(x, rectTransform.anchoredPosition.y), MoveRate, () =>
         {
-            content.gameObject.SetActive(active);
+            SetActive(active);
         });
 
         content.gameObject.SetActive(false);
     }
 
-    private void _addToolSlot(ITool newTool)
+    public void SetActive(bool active)
     {
-        var newSlot = Instantiate(ItemSlotPrefab, content);
-
-        newSlot.SetModel(newTool.GetModel());
-        newSlot.MyTool = newTool;
+        content.gameObject.SetActive(active);
+        if (active)
+        {
+            Messenger.Default.Subscribe<ShipEditorToolInputPayload>(_onInput);
+            _setSelectedItem(selectedIndex);
+        }
+        else
+        {
+            Messenger.Default.Unsubscribe<ShipEditorToolInputPayload>(_onInput);
+        }
     }
 
-    //old code, probably doesn't work
-    public ITool ChangeSelectedItem(int itemIndex)
+    private void _onInput(ShipEditorToolInputPayload payload)
     {
-        //skip if we're just setting to where we already are
-        if (selectedIndex == itemIndex) return content.GetChild(itemIndex).GetComponent<ItemSlot>().MyTool;
+        if (payload.InputType != ShipEditorToolInputPayload.ToolInputType.RightStickHorizontal) return;
 
-        var count = 0;
-        ITool activeTool = null;
-        foreach (Transform itemSlotTransform in content)
+        var delta = (float)payload.InputData;
+
+        if (delta > 0)
         {
-            var itemSlot = itemSlotTransform.GetComponent<ItemSlot>();
-
-            if (itemSlot.IsSelected() && count != itemIndex)
-            { //setting to a new tool, deactivate old tool
-                itemSlot.MyTool.Deactivate();
-            }
-
-            itemSlot.SetSelected(count == itemIndex);
-            if (count == itemIndex) activeTool = itemSlot.MyTool;
-            count++;
+            selectedIndex = Maths.RollingModulo(selectedIndex + 1, content.childCount);
+        }
+        if (delta < 0)
+        {
+            selectedIndex = Maths.RollingModulo(selectedIndex - 1, content.childCount);
         }
 
-        if (activeTool == null)
+        if (delta != 0)
         {
-            return null;
+            _setSelectedItem(selectedIndex);
         }
-
-        //make sure we activate the new tool after disabling the old tool
-        activeTool.Activate();
+    }
+    private void _setSelectedItem(int itemIndex)
+    {
         selectedIndex = itemIndex;
 
-        return activeTool;
+        ThingSlider.DoMeASlide(highlightSprite, highlightSprite.anchoredPosition, new Vector2(selectedIndex * 64f, 0f), MoveRate);
+
+        content.GetChild(selectedIndex).GetComponent<ItemSlot>().Activate();
     }
 }

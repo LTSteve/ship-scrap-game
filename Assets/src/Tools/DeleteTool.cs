@@ -13,9 +13,9 @@ public class DeleteTool : ITool
 
     private PlayerController Player;
 
-    public DeleteTool(PlayerController player)
+    public DeleteTool()
     {
-        Player = player;
+        Player = PlayerController.Instance;
 
         Icon = (Transform)Resources.Load("ToolResources/DeleteIcon", typeof(Transform));
         DeleteMaterial = (Material)Resources.Load("ToolResources/BuildInProgressFail", typeof(Material));
@@ -33,23 +33,14 @@ public class DeleteTool : ITool
         }
     }
 
-    public Transform GetModel()
+    public void ShowPreview()
     {
-        return Icon;
-    }
+        /*
+        var shipComponent = BuildToolView.Instance.CurrentPartTarget;
 
-    public void HandleInputs()
-    {
-        //no special inputs here
-    }
-
-    public void ShowPreview(bool hit, RaycastHit hitInfo)
-    {
-        if(hit && hitInfo.collider.gameObject.layer == 6 && hitInfo.collider.transform.parent.gameObject != Player.ShipRoot.gameObject) //ship part = 6
+        if(shipComponent != null)
         {
-            var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipComponent>();
-
-            if(currentlyPreviewing == null || currentlyPreviewing[0] != shipComponent)
+            if (currentlyPreviewing == null || currentlyPreviewing[0] != shipComponent)
             {
                 _highlight(shipComponent.GetComponent<ShipComponent>());
             }
@@ -59,26 +50,25 @@ public class DeleteTool : ITool
             _unHighlight(currentlyPreviewing);
             currentlyPreviewing = null;
         }
+        */
     }
 
-    public void Use(bool hit, RaycastHit hitInfo)
+    public void Use()
     {
-        if(hit && hitInfo.collider.gameObject.layer == 6 && hitInfo.collider.transform.parent.gameObject != Player.ShipRoot.gameObject) //ship part = 6
+        /*
+        var shipComponent = BuildToolView.Instance.CurrentPartTarget;
+        var nodeList = Maths.CreateTreeNodeList(shipComponent);
+
+        currentlyPreviewing = null;
+        savedMaterials = null;
+
+        shipComponent.Parent.Children.Remove(shipComponent);
+
+        for (var i = 0; i < nodeList.Length; i++)
         {
-            var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipComponent>();
-
-            var nodeList = Maths.CreateTreeNodeList(shipComponent);
-
-            currentlyPreviewing = null;
-            savedMaterials = null;
-
-            shipComponent.Parent.Children.Remove(shipComponent);
-
-            for(var i = 0; i < nodeList.Length; i++)
-            {
-                ((ShipComponent)nodeList[i]).Explode(10f, true);
-            }
+            ((ShipComponent)nodeList[i]).Explode(10f, true);
         }
+        */
     }
 
     private void _highlight(ShipComponent toHighlight)

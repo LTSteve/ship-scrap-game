@@ -1,3 +1,4 @@
+using SuperMaxim.Messaging;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -88,8 +89,6 @@ public class ShipEditorInputMap : MonoBehaviour
     private float rightStick_deadzone = 0.25f;
     public void OnRightstickHorizontal(InputAction.CallbackContext value)
     {
-        if (BuildToolView.Instance == null) return;
-
         var hValue = Maths.ApplyDeadzone(value.ReadValue<float>(), rightStick_deadzone);
 
         if(hValue == 0)
@@ -100,13 +99,13 @@ public class ShipEditorInputMap : MonoBehaviour
 
         if(rightStick_readyForFlick && hValue > 0)
         {
-            BuildToolView.Instance.NextItem();
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.RightStickHorizontal, InputData = 1f });
             rightStick_readyForFlick = false;
         }
         
         if(rightStick_readyForFlick && hValue < 0)
         {
-            BuildToolView.Instance.PreviousItem();
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.RightStickHorizontal, InputData = -1f });
             rightStick_readyForFlick = false;
         }
     }
@@ -115,14 +114,75 @@ public class ShipEditorInputMap : MonoBehaviour
     {
         if (value.performed && BuildToolView.Instance != null)
         {
-            BuildToolView.Instance.NextPanel();
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.RBLB, InputData = 1f });
         }
     }
     public void OnLB(InputAction.CallbackContext value)
     {
         if (value.performed && BuildToolView.Instance != null)
         {
-            BuildToolView.Instance.PreviousPanel();
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.RBLB, InputData = -1f });
+        }
+    }
+
+    public void OnB(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.B, InputData = true });
+        }
+    }
+
+    public void OnA(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.A, InputData = true });
+        }
+    }
+
+    public void OnX(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.X, InputData = true });
+        }
+    }
+
+    public void OnY(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.Y, InputData = true });
+        }
+    }
+
+    public void OnRightStickClick(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.RightStickClick, InputData = true });
+        }
+    }
+
+    private float trigger_deadzone = 0.2f;
+    public void OnRT(InputAction.CallbackContext value)
+    {
+        var triggerValue = Maths.ApplyDeadzone(value.ReadValue<float>(), trigger_deadzone);
+
+        if (triggerValue > 0)
+        {
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.RTLT, InputData = 1f });
+        }
+
+    }
+    public void OnLT(InputAction.CallbackContext value)
+    {
+        var triggerValue = Maths.ApplyDeadzone(value.ReadValue<float>(), trigger_deadzone);
+
+        if (triggerValue > 0)
+        {
+            Messenger.Default.Publish(new ShipEditorToolInputPayload { InputType = ShipEditorToolInputPayload.ToolInputType.RTLT, InputData = -1f });
         }
     }
 }
