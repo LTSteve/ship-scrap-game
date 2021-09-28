@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NotificationScroller : MonoBehaviour
 {
-    public static NotificationScroller Instance;
+    private static NotificationScroller Instance;
 
     private void Awake()
     {
@@ -27,13 +27,15 @@ public class NotificationScroller : MonoBehaviour
     [SerializeField]
     private List<Color> notificationColors;
 
-    public void PushNotification(string message, NotificationType type = NotificationType.Info, float time = -1f)
+    public static void PushNotification(string message, NotificationType type = NotificationType.Info, float time = -1f)
     {
+        if (Instance == null) return;
+
         if (time < 0f)
-            time = notificationTime;
+            time = Instance.notificationTime;
 
-        var newNotification = Instantiate(notificationPrefab, transform);
+        var newNotification = Instantiate(Instance.notificationPrefab, Instance.transform);
 
-        newNotification.Initialize(message, notificationColors[(int)type], time);
+        newNotification.Initialize(message, Instance.notificationColors[(int)type], time);
     }
 }

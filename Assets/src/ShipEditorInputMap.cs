@@ -43,6 +43,7 @@ public class ShipEditorInputMap : MonoBehaviour
 
     public void OnLeftStickClick(InputAction.CallbackContext value)
     {
+        /*
         if (value.started)
         {
             ShipEditor.ToggleZoom(true);
@@ -51,6 +52,7 @@ public class ShipEditorInputMap : MonoBehaviour
         {
             ShipEditor.ToggleZoom(false);
         }
+        */
     }
 
     public void OnDpadUp(InputAction.CallbackContext value)

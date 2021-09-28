@@ -31,8 +31,8 @@ public class ShipEditor : MonoBehaviour
     private Vector2 aimTilt = Vector2.zero;
 
     private float minZoom = 1f;
-    private float maxZoom = 10f;
-    private float currentZoom = 3f;
+    private float maxZoom = 15f;
+    private float currentZoom = 6f;
 
     private Dictionary<string, ShipComponent> ShipComponentPrefabDatabase = new Dictionary<string, ShipComponent>();
 
@@ -63,6 +63,10 @@ public class ShipEditor : MonoBehaviour
         {
             aiming = ((float)payload.InputData) > 0.25f;
         }
+        if(payload.InputType == ShipEditorToolInputPayload.ToolInputType.LT)
+        {
+            ToggleZoom(((float)payload.InputData) > 0.5f);
+        }
     }
 
     public void ToggleZoom(bool active)
@@ -82,13 +86,13 @@ public class ShipEditor : MonoBehaviour
                 
             //set camera bounds & location
             minZoom = Player.GetSize();
-            maxZoom = minZoom * 5f;
+            maxZoom = minZoom * 15f;
 
-            currentZoom = minZoom * 3f;
+            currentZoom = minZoom * 6f;
             CameraPosition.position = Player.transform.position + (Vector3.one.normalized * currentZoom);
 
             //push notification
-            NotificationScroller.Instance.PushNotification("Edit Mode");
+            NotificationScroller.PushNotification("Edit Mode");
         }
         else
         {
@@ -142,17 +146,12 @@ public class ShipEditor : MonoBehaviour
 
             var camTransform = SmoothCam.Instance.TiltOffset;
 
-
             //weird interaction, fix this later
-            var colls = Physics.RaycastAll(camTransform.position, camTransform.forward, LayerMask.GetMask(new string[] { "ShipPart" })).Where(x=>x.collider.gameObject.layer == LayerMask.NameToLayer("ShipPart"));
+            var colls = Physics.RaycastAll(camTransform.position, camTransform.forward, LayerMask.GetMask(new string[] { "ShipPart" })).Where(x => x.collider.gameObject.layer == LayerMask.NameToLayer("ShipPart"));
 
             if (colls.Any())
             {
                 var hitInfo = colls.Where(x => x.distance == colls.Min(x => x.distance)).First();
-                if (hitInfo.collider.transform.parent == null)
-                {
-                    Debug.Log("asdf");
-                }
                 var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipComponent>();
 
                 Messenger.Default.Publish(new ShipEditorAimPayload { SelectedComponent = shipComponent, NearestBuildPoint = shipComponent.GetNearestBuildPoint(hitInfo.point) });

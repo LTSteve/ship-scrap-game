@@ -84,6 +84,8 @@ public class BuildTool : ITool
             GameObject.Destroy(GhostPart.gameObject);
         GhostPart = null;
 
+        SmoothCam.Instance.TemporaryFocus(null);
+
         active = false;
     }
 
@@ -93,6 +95,7 @@ public class BuildTool : ITool
         {
             case ShipEditorToolInputPayload.ToolInputType.A:
                 Use();
+                _aquireTarget();
                 _showPreview();
                 break;
             case ShipEditorToolInputPayload.ToolInputType.X:
@@ -102,9 +105,6 @@ public class BuildTool : ITool
             case ShipEditorToolInputPayload.ToolInputType.Y:
                 connectionPointIndex++;
                 _showPreview();
-                break;
-            case ShipEditorToolInputPayload.ToolInputType.RightStickClick:
-                //TODO: display part info
                 break;
         }
     }
@@ -153,6 +153,8 @@ public class BuildTool : ITool
         _assignBuildPoint(payload.NearestBuildPoint);
 
         _showPreview();
+            
+        SmoothCam.Instance.TemporaryFocus(currentBuildPointTarget);
     }
 
     private void _showPreview()
@@ -178,11 +180,13 @@ public class BuildTool : ITool
         //make sure we can build
         if (Physics.CheckBox(currentColliderCenter + GhostPart.transform.position, currentColliderExtents, GhostPart.transform.rotation, LayerMask.GetMask(new string[] { "ShipPart" })))
         {
+            NotificationScroller.PushNotification("Part blocked!", NotificationScroller.NotificationType.Error);
             return;
         }
         var player = PlayerController.Instance;
         if (player == null || !player.PayScrap(GhostPart.Price))
         {
+            NotificationScroller.PushNotification("Can't pay " + GhostPart.Price + " scrap!", NotificationScroller.NotificationType.Error);
             return;
         }
 
@@ -222,10 +226,9 @@ public class BuildTool : ITool
         var otherBuildPoint = GhostPart.GetBuildPoint(connectionPointIndex); //the build point on our current ghost part
 
         //rotate the ghost part so the build points align (opposite directions)
-        GhostPart.transform.rotation = 
-            buildPoint.rotation //set the point we're building on as the reference rotation
-            * Quaternion.Inverse(otherBuildPoint.localRotation) //turn relative to where my build point is
-            * Quaternion.Euler(180, 0, 0); //then turn 180
+        GhostPart.transform.rotation =
+            buildPoint.rotation * Quaternion.Euler(0f,180f,0f) //set the point we're building on as the reference rotation
+            * Quaternion.Inverse(otherBuildPoint.localRotation); //turn relative to where my build point is
 
         //rotate the ghost part around the connection axis based on rotation index
         GhostPart.transform.rotation *= Quaternion.AngleAxis(90f * rotationIndex, Quaternion.Inverse(GhostPart.transform.rotation) * buildPoint.forward);

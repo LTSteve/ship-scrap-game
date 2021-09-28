@@ -29,6 +29,8 @@ public class SmoothCam : MonoBehaviour
 
     private Vector2 tilt = Vector2.zero;
 
+    private Transform temporaryFocusTransform;
+
     public void SetReference(Transform positionRef, Transform aimRef, bool alignToZ = true, bool tight = false)
     {
         positionReference = positionRef;
@@ -38,7 +40,7 @@ public class SmoothCam : MonoBehaviour
         transform.LookAt(aimRef);
 
         alignCamToZ = alignToZ;
-        tightRotation = tight;
+        tightRotation = false;//tight;
 
         tilt = Vector2.zero;
     }
@@ -46,6 +48,20 @@ public class SmoothCam : MonoBehaviour
     public void Tilt(Vector2 tilt)
     {
         this.tilt = tilt;
+    }
+
+    public void TemporaryFocus(Transform temporaryFocusPoint)
+    {
+        if(temporaryFocusPoint != temporaryFocusTransform)
+        {
+            tilt = Vector2.zero;
+        }
+        temporaryFocusTransform = temporaryFocusPoint;
+
+        if(temporaryFocusPoint == null)
+        {
+            TiltOffset.localPosition = Vector3.zero;
+        }
     }
 
     private void Update()
@@ -73,17 +89,19 @@ public class SmoothCam : MonoBehaviour
 
         //transform.LookAt(aimReference, transform.up);
 
+        var currentAimReference = (tilt != Vector2.zero || temporaryFocusTransform == null) ? aimReference : temporaryFocusTransform;
+
         var quartb4 = transform.rotation;
         if (alignCamToZ)
         {
-            transform.LookAt(aimReference, aimReference.up);
+            transform.LookAt(currentAimReference, aimReference.up);
         }
         else
         {
-            transform.LookAt(aimReference, transform.up);
+            transform.LookAt(currentAimReference, transform.up);
         }
 
-        TiltOffset.localPosition = new Vector3(tilt.x, tilt.y);
+        TiltOffset.localPosition = Vector3.Lerp(TiltOffset.localPosition, new Vector3(tilt.x, tilt.y), 0.5f * Time.deltaTime);
 
         if(!tightRotation)
             transform.rotation = Quaternion.Lerp(quartb4, transform.rotation, rotationRate);
