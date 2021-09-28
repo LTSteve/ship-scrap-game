@@ -65,6 +65,17 @@ public class FixedThruster : ShipComponent
         shipBody = MyShip.GetComponent<Rigidbody>();
     }
 
+    public override List<ShipComponentData> GetData()
+    {
+        var toReturn = base.GetData();
+
+        toReturn.Add(new ShipComponentData { Label = "E/s", Value = "" + EnergyConsumption });
+        toReturn.Add(new ShipComponentData { Label = "Tr", Value = "" + Thrust });
+
+        return toReturn;
+    }
+
+
     private void Update()
     {
         if (inputToWatch == null) return;

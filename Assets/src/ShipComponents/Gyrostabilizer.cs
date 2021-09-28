@@ -62,6 +62,16 @@ public class Gyrostabilizer : ShipComponent
         shipRigidBody.AddRelativeTorque(torqueTarget * Time.fixedDeltaTime, ForceMode.Force);
     }
 
+    public override List<ShipComponentData> GetData()
+    {
+        var toReturn = base.GetData();
+
+        toReturn.Add(new ShipComponentData { Label = "E/s", Value = "" + MaxEnergyDrain });
+        toReturn.Add(new ShipComponentData { Label = "Tq", Value = "" + MaxTorque });
+
+        return toReturn;
+    }
+
     private Vector3 _generateStabilizationAngularVelocity()
     {
 

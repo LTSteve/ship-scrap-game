@@ -545,6 +545,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   children: []
   MyShip: {fileID: 0}
+  Name: L C01
   Mass: 1
   Price: 10
   Health: 1

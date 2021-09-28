@@ -185,6 +185,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   children: []
   MyShip: {fileID: 0}
+  Name: I2 Pit
   Mass: 0.5
   Price: 100
   Health: 1

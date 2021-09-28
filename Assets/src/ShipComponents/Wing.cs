@@ -71,6 +71,16 @@ public class Wing : ShipComponent
         }
     }
 
+    public override List<ShipComponentData> GetData()
+    {
+        var toReturn = base.GetData();
+
+        toReturn.Add(new ShipComponentData { Label = "E/s", Value = "" + EnergyConsumption * 2 });
+        toReturn.Add(new ShipComponentData { Label = "Tr", Value = "" + Thrust * 2 });
+
+        return toReturn;
+    }
+
     private class WingThruster
     {
         public Vector3 ShipRelativeThrustDirection;

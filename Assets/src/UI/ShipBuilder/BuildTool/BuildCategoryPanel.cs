@@ -45,12 +45,12 @@ public class BuildCategoryPanel : MonoBehaviour
             SetActive(active);
         });
 
-        content.gameObject.SetActive(false);
+        //content.gameObject.SetActive(false);
     }
 
     public void SetActive(bool active)
     {
-        content.gameObject.SetActive(active);
+        //content.gameObject.SetActive(active);
         if (active)
         {
             Messenger.Default.Subscribe<ShipEditorToolInputPayload>(_onInput);
@@ -86,8 +86,16 @@ public class BuildCategoryPanel : MonoBehaviour
     {
         selectedIndex = itemIndex;
 
-        ThingSlider.DoMeASlide(highlightSprite, highlightSprite.anchoredPosition, new Vector2(selectedIndex * 64f, 0f), MoveRate);
+        ThingSlider.DoMeASlide(highlightSprite, highlightSprite.anchoredPosition, new Vector2(selectedIndex * 74f, 0f), MoveRate);
 
-        content.GetChild(selectedIndex).GetComponent<ItemSlot>().Activate();
+        for(var i = 0; i < content.childCount; i++)
+        {
+            var child = content.GetChild(i).GetComponent<ItemSlot>();
+
+            if (i == selectedIndex)
+                child.Activate();
+            else
+                child.Deactivate();
+        }
     }
 }

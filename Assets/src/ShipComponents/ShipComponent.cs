@@ -18,6 +18,8 @@ public class ShipComponent : MonoBehaviour, ITreeNode
 
     public Ship MyShip;
 
+    public string Name = "Component";
+
     public float Mass = 1f;
     public int Price = 10;
     public float Health = 1f;
@@ -115,6 +117,23 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         }
 
         Destroy(this.gameObject);
+    }
+
+    public class ShipComponentData
+    {
+        public string Label;
+        public string Value;
+    }
+
+    public virtual List<ShipComponentData> GetData()
+    {
+        var datas = new List<ShipComponentData>();
+
+        datas.Add(new ShipComponentData { Label = "C", Value = "" + Price });
+        datas.Add(new ShipComponentData { Label = "W", Value = "" + Mass });
+        datas.Add(new ShipComponentData { Label = "HP", Value = "" + Health });
+
+        return datas;
     }
 
     public virtual void LoadPropertiesFromModel(ShipComponentModel model)

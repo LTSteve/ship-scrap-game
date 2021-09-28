@@ -216,6 +216,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   children: []
   MyShip: {fileID: 0}
+  Name: FI Thruster
   Mass: 1
   Price: 10
   Health: 1

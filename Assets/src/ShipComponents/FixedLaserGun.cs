@@ -30,6 +30,17 @@ public class FixedLaserGun : ShipComponent
         }
     }
 
+    public override List<ShipComponentData> GetData()
+    {
+        var toReturn = base.GetData();
+
+        toReturn.Add(new ShipComponentData { Label = "E/s", Value = "" + EnergyConsumption });
+        toReturn.Add(new ShipComponentData { Label = "DPS", Value = "" + Damage });
+
+        return toReturn;
+    }
+
+
     private void Update()
     {
         if (MyShip == null) return;

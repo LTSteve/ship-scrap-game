@@ -11,4 +11,13 @@ public class EnergyStorage : ShipComponent
         base.ApplyShipStats(shipState);
         shipState.MaxPower += EnergyCapacity;
     }
+
+    public override List<ShipComponentData> GetData()
+    {
+        var toReturn = base.GetData();
+
+        toReturn.Add(new ShipComponentData { Label = "EC", Value = "" + EnergyCapacity });
+
+        return toReturn;
+    }
 }
