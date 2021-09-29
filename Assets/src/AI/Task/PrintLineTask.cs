@@ -16,6 +16,8 @@ public class PrintLineTask : ITask
 
     public bool Update(Ship ship, float delta)
     {
+        Debug.Log(Text);
+
         done = true;
 
         return Done(ship);

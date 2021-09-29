@@ -104,4 +104,14 @@ public static class Maths
     {
         return Quaternion.Inverse(subjectRotation) * worldDirection;
     }
+
+    public static Vector4 Q2V4(Quaternion input)
+    {
+        return new Vector4(input.x, input.y, input.z, input.w);
+    }
+
+    public static Quaternion V42Q(Vector4 input)
+    {
+        return new Quaternion(input.x, input.y, input.z, input.w);
+    }
 }

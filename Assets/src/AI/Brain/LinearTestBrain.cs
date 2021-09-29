@@ -5,30 +5,19 @@ using SteveD.TJSON;
 
 public class LinearTestBrain : AbstractBrain
 {
-    [TextArea(30,300)]
-    public string TaskListString;
+    public TJSON TaskListTSON;
 
     private bool initialized = false;
 
-    private List<ITask> taskList = new List<ITask>() {
-        new WaitTask(),
-        new PrintLineTask(),
-        new MultiTask(){ Tasks = new List<ITask> {
-            new ThrustTask(),
-            new RotationTask()
-        } }
-    };
+    private List<ITask> taskList;
 
     public override ITask GetNextTask()
     {
         if (!initialized)
         {
-            if(!string.IsNullOrEmpty(TaskListString))
-                taskList = (List<ITask>)TJSONParser.Parse(TaskListString);
-            else
-            {
-                TaskListString = TJSONParser.Encode(taskList);
-            }
+            if(TaskListTSON != null && !string.IsNullOrEmpty(TaskListTSON.Data))
+                taskList = ((TaskList)TJSONParser.Parse(TaskListTSON.Data)).Tasks;
+
             initialized = true;
         }
 

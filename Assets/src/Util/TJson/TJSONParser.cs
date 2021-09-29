@@ -66,6 +66,8 @@ namespace SteveD.TJSON
                     return _parseQuaternion(data);
                 case TJSONReader.JsonDataType.Vector3:
                     return _parseVector3(data);
+                case TJSONReader.JsonDataType.Null:
+                    return null;
                 default:
                     Debug.LogError("Unknown Json Data Type");
                     return null;

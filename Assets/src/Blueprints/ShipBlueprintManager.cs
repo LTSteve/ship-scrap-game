@@ -6,8 +6,7 @@ using UnityEngine;
 [ExecuteAlways]
 public class ShipBlueprintManager : MonoBehaviour
 {
-    [TextArea]
-    public string BlueprintJSON;
+    public TJSON BlueprintTJSON;
 
     public bool RecalculateBlueprint;
     public bool SaveBlueprint;
@@ -33,7 +32,7 @@ public class ShipBlueprintManager : MonoBehaviour
             List<ShipComponentModel> blueprint;
             try
             {
-                blueprint = (List<ShipComponentModel>)TJSONParser.Parse(BlueprintJSON);
+                blueprint = ((ShipBlueprintList)TJSONParser.Parse(BlueprintTJSON.Data)).Parts;
             }
             catch
             {
@@ -65,9 +64,9 @@ public class ShipBlueprintManager : MonoBehaviour
                 blueprint[i].TreeAddress = genericBlueprint[i].GetTreeAddress();
             }
 
-            BlueprintJSON = TJSONParser.Encode(blueprint);
+            BlueprintTJSON.Data = TJSONParser.Encode(new ShipBlueprintList() { Parts = blueprint });
 
-            GUIUtility.systemCopyBuffer = BlueprintJSON;
+            GUIUtility.systemCopyBuffer = BlueprintTJSON.Data;
 
             SaveBlueprint = false;
         }

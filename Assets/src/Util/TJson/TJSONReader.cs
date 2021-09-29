@@ -17,6 +17,7 @@ namespace SteveD.TJSON.Reader
             Float,
             Vector3,
             Quaternion,
+            Null,
             UNKNOWN
         }
 
@@ -54,6 +55,11 @@ namespace SteveD.TJSON.Reader
             if (inputData.ToLower().StartsWith("true") || inputData.ToLower().StartsWith("false"))
             {
                 return JsonDataType.Bool;
+            }
+
+            if (inputData.ToLower().StartsWith("null"))
+            {
+                return JsonDataType.Null;
             }
 
             var dotIndex = inputData.Contains(".") ? inputData.IndexOf('.') : int.MaxValue;
