@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4065612249543533141
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4065612249543533138}
+  m_Layer: 0
+  m_Name: Model
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4065612249543533138
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4065612249543533141}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4065612249571523199}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4065612249571523168
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4065612249571523199}
+  - component: {fileID: 5237303093545313319}
+  - component: {fileID: 4065612249571523198}
+  - component: {fileID: 4065612249571523169}
+  - component: {fileID: 6885799466411189221}
+  m_Layer: 0
+  m_Name: AIShip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4065612249571523199
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4065612249571523168}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4065612249543533138}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5237303093545313319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4065612249571523168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eb51b1309fe06542bd2e0f65d1e1f79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShipRoot: {fileID: 0}
+--- !u!54 &4065612249571523198
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4065612249571523168}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0.01
+  m_AngularDrag: 0.01
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 1
+--- !u!114 &4065612249571523169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4065612249571523168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ed92e6ab9c8cf48ba93a99caa0d7fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BlueprintJSON: '{"Items":[{"PrefabLocation":"ShipParts/struct/structural block","Offset":{"x":0.0,"y":0.0,"z":0.0},"Rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"TreeAddress":""},{"PrefabLocation":"ShipParts/cockpit/inline
+    cockpit","Offset":{"x":-4.3312570596754087e-7,"y":0.0,"z":1.0},"Rotation":{"x":0.0,"y":-4.3312570596754087e-7,"z":0.0,"w":1.0},"TreeAddress":"0"},{"PrefabLocation":"ShipParts/util/inline
+    generator","Offset":{"x":-1.092784742695585e-7,"y":0.0,"z":-1.75},"Rotation":{"x":0.0,"y":-4.371138828673793e-8,"z":4.257865661833231e-28,"w":-1.0},"TreeAddress":"1"},{"PrefabLocation":"ShipParts/struct/structural
+    block","Offset":{"x":1.0000003576278687,"y":1.1920928955078126e-7,"z":-1.341104507446289e-7},"Rotation":{"x":-0.7071068286895752,"y":0.7071068286895752,"z":2.223532646894455e-7,"w":5.180481821298599e-8},"TreeAddress":"2"},{"PrefabLocation":"ShipParts/struct/structural
+    block","Offset":{"x":-1.0,"y":2.384185791015625e-7,"z":-0.0000017061829566955567},"Rotation":{"x":7.450581307466564e-8,"y":2.179294966708767e-7,"z":0.70710688829422,"w":-0.7071067094802856},"TreeAddress":"3"},{"PrefabLocation":"ShipParts/guns/gun","Offset":{"x":-0.0000012556656656670385,"y":0.0,"z":2.0},"Rotation":{"x":0.0,"y":-3.8941431057537559e-7,"z":0.0,"w":1.0},"TreeAddress":"00"},{"PrefabLocation":"ShipParts/mobility/thruster","Offset":{"x":-1.9670123663217965e-7,"y":4.371139183945161e-8,"z":-2.75},"Rotation":{"x":0.70710688829422,"y":0.7071066498756409,"z":-1.0760528684999709e-15,"w":-6.181723222198343e-8},"TreeAddress":"10"},{"PrefabLocation":"ShipParts/mobility/thruster","Offset":{"x":1.0000005960464478,"y":7.152557373046875e-7,"z":-1.0000087022781373},"Rotation":{"x":-1.6645206812881953e-7,"y":-1.0,"z":-2.0116564769523394e-7,"w":1.6763804921993143e-7},"TreeAddress":"20"},{"PrefabLocation":"ShipParts/mobility/thruster","Offset":{"x":1.000001072883606,"y":-3.5762786865234377e-7,"z":0.9999960660934448},"Rotation":{"x":8.940696005765858e-8,"y":-1.9930300254600298e-7,"z":1.0,"w":-1.8953866742776882e-7},"TreeAddress":"21"},{"PrefabLocation":"ShipParts/mobility/wing","Offset":{"x":2.0,"y":2.384185791015625e-7,"z":-0.009993411600589753},"Rotation":{"x":-0.49999967217445376,"y":0.4999997615814209,"z":0.5000004768371582,"w":0.5000001192092896},"TreeAddress":"22"},{"PrefabLocation":"ShipParts/mobility/thruster","Offset":{"x":-1.0000001192092896,"y":5.960464477539063e-7,"z":0.999998927116394},"Rotation":{"x":-2.076849341392517e-7,"y":-5.8673322200775149e-8,"z":8.880306268110871e-8,"w":1.0},"TreeAddress":"30"},{"PrefabLocation":"ShipParts/mobility/thruster","Offset":{"x":-0.9999997615814209,"y":-2.384185791015625e-7,"z":-0.9999991655349731},"Rotation":{"x":1.0,"y":-2.591914380900562e-7,"z":1.4528632164001466e-7,"w":2.0512379705905915e-7},"TreeAddress":"31"},{"PrefabLocation":"ShipParts/mobility/wing","Offset":{"x":-2.0,"y":9.5367431640625e-7,"z":-0.01000436395406723},"Rotation":{"x":0.5000000596046448,"y":0.4999997317790985,"z":-0.5000001788139343,"w":0.5000001192092896},"TreeAddress":"32"}]}'
+  RecalculateBlueprint: 0
+  SaveBlueprint: 0
+  shipRoot: {fileID: 0}
+--- !u!114 &6885799466411189221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4065612249571523168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9b1ad7678f6e2745a6fd95141f2d25d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

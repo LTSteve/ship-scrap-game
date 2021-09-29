@@ -1,3 +1,4 @@
+using SteveD.TJSON;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,17 +30,17 @@ public class ShipBlueprintManager : MonoBehaviour
     {
         if (RecalculateBlueprint)
         {
-            ShipComponentModel[] blueprint;
+            List<ShipComponentModel> blueprint;
             try
             {
-                blueprint = JsonUtility.FromJson<JsonArrayWrapper<ShipComponentModel>>(BlueprintJSON).Items;
+                blueprint = (List<ShipComponentModel>)TJSONParser.Parse(BlueprintJSON);
             }
             catch
             {
                 return;
             }
 
-            if (blueprint != null && blueprint.Length > 0)
+            if (blueprint != null && blueprint.Count > 0)
             {
                 _clearCurrentShip();
 
@@ -64,7 +65,7 @@ public class ShipBlueprintManager : MonoBehaviour
                 blueprint[i].TreeAddress = genericBlueprint[i].GetTreeAddress();
             }
 
-            BlueprintJSON = JsonUtility.ToJson(JsonArrayWrapper<ShipComponentModel>.Wrap(blueprint));
+            BlueprintJSON = TJSONParser.Encode(blueprint);
 
             GUIUtility.systemCopyBuffer = BlueprintJSON;
 
@@ -95,11 +96,11 @@ public class ShipBlueprintManager : MonoBehaviour
         }
     }
 
-    private ShipComponent _buildShip(ShipComponentModel[] componentModels)
+    private ShipComponent _buildShip(List<ShipComponentModel> componentModels)
     {
         BlueprintTree tree = new BlueprintTree();
 
-        for(var i = 0; i < componentModels.Length; i++)
+        for(var i = 0; i < componentModels.Count; i++)
         {
             _buildComponent(componentModels[i], tree);
         }

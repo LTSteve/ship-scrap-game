@@ -29,6 +29,36 @@ public class InputState
 
         return 0f;
     }
+    public void SetThrustByString(string input, float value)
+    {
+        if (input == "Thrust")
+        {
+            Thrust = value;
+        }
+        if (input == "Vertical Thrust")
+        {
+            VerticalThrust = value;
+        }
+        if (input == "Horizontal Thrust")
+        {
+            HorizontalThrust = value;
+        }
+    }
+    public void SetRotationByString(string input, float value)
+    {
+        if (input == "Pitch")
+        {
+            Pitch = value;
+        }
+        if (input == "Roll")
+        {
+            Roll = value;
+        }
+        if (input == "Yaw")
+        {
+            Yaw = value;
+        }
+    }
 
     public bool Fire1;
     public bool GyrosActive = true;
