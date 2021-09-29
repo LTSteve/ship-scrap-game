@@ -58,10 +58,10 @@ public class ShipBlueprintManager : MonoBehaviour
 
             var genericBlueprint = Maths.CreateTreeNodeList(shipRoot);
 
-            ShipComponentModel[] blueprint = new ShipComponentModel[genericBlueprint.Length];
+            List<ShipComponentModel> blueprint = new List<ShipComponentModel>();
             for(var i = 0; i < genericBlueprint.Length; i++)
             {
-                blueprint[i] = ((ShipComponent)genericBlueprint[i]).SavePropertiesToModel();
+                blueprint.Add(((ShipComponent)genericBlueprint[i]).SavePropertiesToModel());
                 blueprint[i].TreeAddress = genericBlueprint[i].GetTreeAddress();
             }
 

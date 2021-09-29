@@ -15,6 +15,8 @@ namespace SteveD.TJSON.Reader
             Bool,
             Int,
             Float,
+            Vector3,
+            Quaternion,
             UNKNOWN
         }
 
@@ -28,6 +30,20 @@ namespace SteveD.TJSON.Reader
             if (inputData[0] == '{')
             {
                 return JsonDataType.Object;
+            }
+
+            if (inputData.StartsWith("\"("))
+            {
+                var inputtxt = ReadString(inputData);
+                var sections = inputtxt.Split(',');
+                if (sections.Length == 3)
+                {
+                    return JsonDataType.Vector3;
+                }
+                else if(sections.Length == 4)
+                {
+                    return JsonDataType.Quaternion;
+                }
             }
 
             if (inputData[0] == '\"' || inputData[0] == '\'')
@@ -92,7 +108,7 @@ namespace SteveD.TJSON.Reader
                     valueData = "[" + ReadArray(inputData) + "]";
                 }
             }
-            else if(dataType == JsonDataType.String)
+            else if(dataType == JsonDataType.String || dataType == JsonDataType.Vector3 || dataType == JsonDataType.Quaternion)
             {
                 valueData = "\"" + ReadString(inputData) + "\"";
             }

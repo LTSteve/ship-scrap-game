@@ -62,7 +62,10 @@ namespace SteveD.TJSON
                     return float.Parse(data);
                 case TJSONReader.JsonDataType.String:
                     return _parseString(data);
-
+                case TJSONReader.JsonDataType.Quaternion:
+                    return _parseQuaternion(data);
+                case TJSONReader.JsonDataType.Vector3:
+                    return _parseVector3(data);
                 default:
                     Debug.LogError("Unknown Json Data Type");
                     return null;
@@ -140,6 +143,19 @@ namespace SteveD.TJSON
             return TJSONReader.ReadString(data);
         }
 
+        private static Quaternion _parseQuaternion(string data)
+        {
+            data = data.Substring(2, data.Length - 4);
+            var parts = data.Split(',');
+            return new Quaternion(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3]));
+        }
+        private static Vector3 _parseVector3(string data)
+        {
+            data = data.Substring(2, data.Length - 4);
+            var parts = data.Split(',');
+            return new Vector3(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
+        }
+
         private static object _parseNumber(string data)
         {
             if (data.Contains("."))
@@ -159,6 +175,11 @@ namespace SteveD.TJSON
             if (data is float || data is int || data is string || data is bool)
             {
                 return _encodeBasic(data);
+            }
+
+            if(data is Vector3 || data is Quaternion)
+            {
+                return _encodeStruct(data);
             }
 
             if (data is IList)
@@ -231,6 +252,10 @@ namespace SteveD.TJSON
         private static string _encodeBasic(object data)
         {
             return data == null ? "\"null\"" : (data is string ? ("\"" + data.ToString() + "\"") : data.ToString());
+        }
+
+        private static string _encodeStruct(object data){
+            return "\"" + data.ToString() + "\"";
         }
 
         private static string _fullyTrimString(string data)
