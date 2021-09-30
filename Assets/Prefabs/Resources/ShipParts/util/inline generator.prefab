@@ -85,7 +85,7 @@ MonoBehaviour:
   Price: 10
   Health: 1
   prefabLocation: ShipParts/util/inline generator
-  EnergyProduction: 1
+  EnergyProduction: 50
 --- !u!1 &2489688186709850781
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 355a45f092bb31844936ad4cff261556, type: 3}
   m_Name: HelloWorld
   m_EditorClassIdentifier: 
-  Data: 
+  Data: '{".OBJECTTYPE":"TaskList","Tasks":{".LISTTYPE":"ITask","Items":[{".OBJECTTYPE":"PrintLineTask","Text":"Hello
+    World!"},{".OBJECTTYPE":"ThrustTask","Time":1,"Power":1,"Direction":"Thrust"},{".OBJECTTYPE":"PrintLineTask","Text":"Waw!"}]}}'

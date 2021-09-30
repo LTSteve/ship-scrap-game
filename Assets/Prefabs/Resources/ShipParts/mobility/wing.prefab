@@ -286,7 +286,7 @@ MonoBehaviour:
   Health: 1
   prefabLocation: ShipParts/mobility/wing
   thrustPoints: {fileID: 7863039257209444533}
-  Thrust: 100
+  Thrust: 20
   EnergyConsumption: 0.1
   CounterThrustDeadzone: 0.01
 --- !u!1 &6653710550924820348

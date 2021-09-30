@@ -10,6 +10,7 @@ public abstract class Ship : MonoBehaviour
     public InputState InputState { get; private set; } = new InputState();
 
     protected Rigidbody rigidbody;
+    [SerializeField]
     protected ShipState myState;
     protected bool control = false;
 
