@@ -22,6 +22,8 @@ namespace SteveD.TJSON
         private void OnEnable()
         {
             tjsonFile = (TJSON)target;
+            serializedObject.Update();
+            tjsonFile.Data = serializedObject.FindProperty("Data").stringValue;
         }
 
         public override void OnInspectorGUI()
@@ -63,7 +65,11 @@ namespace SteveD.TJSON
         {
             if (objectDirty)
             {
+                serializedObject.Update();
                 tjsonFile.Data = TJSONParser.Encode(objectToEdit);
+                serializedObject.FindProperty("Data").stringValue = tjsonFile.Data;
+                EditorUtility.SetDirty(tjsonFile);
+                AssetDatabase.SaveAssets();
             }
         }
 
@@ -298,7 +304,7 @@ namespace SteveD.TJSON
         private object _newValueRender(object oldValue, Type dataType)
         {
             var newValue = _renderData(oldValue, dataType);
-            if (oldValue != newValue)
+            if (!object.Equals(oldValue,newValue))
             {
                 objectDirty = true;
                 return newValue;

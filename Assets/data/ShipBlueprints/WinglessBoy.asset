@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 355a45f092bb31844936ad4cff261556, type: 3}
-  m_Name: WingedBoy
+  m_Name: WinglessBoy
   m_EditorClassIdentifier: 
   Data: '{".OBJECTTYPE":"ShipBlueprintList","Parts":{".LISTTYPE":"ShipComponentModel","Items":[{".OBJECTTYPE":"ShipComponentModel","PrefabLocation":"ShipParts/struct/structural
     block","Offset":"(0.0, 0.0, 0.0)","Rotation":"(0.0, 0.0, 0.0, 1.0)","TreeAddress":""},{".OBJECTTYPE":"ShipComponentModel","PrefabLocation":"ShipParts/cockpit/inline
@@ -21,8 +21,6 @@ MonoBehaviour:
     0.0, 2.0)","Rotation":"(0.0, 0.0, 0.0, 1.0)","TreeAddress":"00"},{".OBJECTTYPE":"ShipComponentModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(0.0,
     0.0, -2.8)","Rotation":"(0.7, 0.7, 0.0, 0.0)","TreeAddress":"10"},{".OBJECTTYPE":"ShipComponentModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(1.0,
     0.0, -1.0)","Rotation":"(0.0, -1.0, 0.0, 0.0)","TreeAddress":"20"},{".OBJECTTYPE":"ShipComponentModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(1.0,
-    0.0, 1.0)","Rotation":"(0.0, 0.0, 1.0, 0.0)","TreeAddress":"21"},{".OBJECTTYPE":"ShipComponentModel","PrefabLocation":"ShipParts/mobility/wing","Offset":"(2.0,
-    0.0, 0.0)","Rotation":"(-0.5, 0.5, 0.5, 0.5)","TreeAddress":"22"},{".OBJECTTYPE":"ShipComponentModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(-1.0,
+    0.0, 1.0)","Rotation":"(0.0, 0.0, 1.0, 0.0)","TreeAddress":"21"},{".OBJECTTYPE":"ShipComponentModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(-1.0,
     0.0, 1.0)","Rotation":"(0.0, 0.0, 0.0, 1.0)","TreeAddress":"30"},{".OBJECTTYPE":"ShipComponentModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(-1.0,
-    0.0, -1.0)","Rotation":"(1.0, 0.0, 0.0, 0.0)","TreeAddress":"31"},{".OBJECTTYPE":"ShipComponentModel","PrefabLocation":"ShipParts/mobility/wing","Offset":"(-2.0,
-    0.0, 0.0)","Rotation":"(0.5, 0.5, -0.5, 0.5)","TreeAddress":"32"}]}}'
+    0.0, -1.0)","Rotation":"(1.0, 0.0, 0.0, 0.0)","TreeAddress":"31"}]}}'

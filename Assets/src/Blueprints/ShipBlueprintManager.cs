@@ -2,6 +2,7 @@ using SteveD.TJSON;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [ExecuteAlways]
 public class ShipBlueprintManager : MonoBehaviour
@@ -67,6 +68,9 @@ public class ShipBlueprintManager : MonoBehaviour
             BlueprintTJSON.Data = TJSONParser.Encode(new ShipBlueprintList() { Parts = blueprint });
 
             GUIUtility.systemCopyBuffer = BlueprintTJSON.Data;
+
+            EditorUtility.SetDirty(BlueprintTJSON);
+            AssetDatabase.SaveAssets();
 
             SaveBlueprint = false;
         }
