@@ -83,7 +83,7 @@ public class ShipEditor : MonoBehaviour
         {
             //grab camera
             SmoothCam.Instance.SetReference(CameraPosition, CameraTarget, false, true);
-                
+
             //set camera bounds & location
             minZoom = Player.GetSize();
             maxZoom = minZoom * 15f;

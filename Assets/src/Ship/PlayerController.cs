@@ -77,36 +77,15 @@ public class PlayerController : Ship
             PowerMeter.Instance.SetState(myState.MaxPower == 0 ? 0f : (myState.CurrentPower / myState.MaxPower));
             PowerDrawIconBar.Instance.Activate();
             PowerMeter.Instance.Activate();
-
-            //turn on gun crosshairs
-            _toggleCrosshairs(true);
         }
         else
         {
             //deactivate UI
             PowerDrawIconBar.Instance.Deactivate();
             PowerMeter.Instance.Deactivate();
-
-            //turn off gun crosshairs
-            _toggleCrosshairs(false);
-        }
-    }
-
-    private void _toggleCrosshairs(bool value)
-    {
-        if (ShipRoot != null)
-        {
-            var guns = transform.Find("Model").gameObject.GetComponentsInChildren<FixedLaserGun>();
-
-            foreach (var g in guns)
-            {
-                var crosshairs = g.transform.Find("crosshairs");
-                foreach (Transform c in crosshairs)
-                {
-                    c.gameObject.SetActive(value);
-                }
-            }
         }
 
+        //toggle crosshairs
+        TargetIndicator.SetActive(control);
     }
 }

@@ -8,8 +8,6 @@ public class FixedLaserGun : ShipComponent
     public float EnergyConsumption = 2f;
 
     [SerializeField]
-    private Transform crosshairs;
-    [SerializeField]
     private Transform gunTip;
 
     private LineRenderer lineRenderer;
@@ -22,12 +20,6 @@ public class FixedLaserGun : ShipComponent
 
         this.shipState = shipState;
         lineRenderer = GetComponent<LineRenderer>();
-
-
-        foreach (Transform child in crosshairs)
-        {
-            child.gameObject.layer = 7;//that's the crosshairs layer
-        }
     }
 
     public override List<ShipComponentData> GetData()
@@ -54,6 +46,10 @@ public class FixedLaserGun : ShipComponent
 
         var powerConsumption = EnergyConsumption * Time.deltaTime;
 
+        var potentialTargetedPosition = TargetIndicator.GetTargetedPosition();
+        var targetedPosition = potentialTargetedPosition.HasValue ?
+            potentialTargetedPosition.Value : gunTip.forward * 1000f + gunTip.position;
+
         if (!firing || shipState.CurrentPower < powerConsumption)
         {
             lineRenderer.enabled = false;
@@ -64,15 +60,12 @@ public class FixedLaserGun : ShipComponent
         shipState.CurrentPower -= powerConsumption;
 
         lineRenderer.SetPosition(0, gunTip.position);
-        lineRenderer.SetPosition(1, crosshairs.position);
+        lineRenderer.SetPosition(1, targetedPosition);
 
-
-        var direction = (crosshairs.position - gunTip.position);
-
-        var layerMask = new LayerMask() | ( 1 << LayerMask.NameToLayer("ShipPart"));
+        var direction = (targetedPosition - gunTip.position);
 
         //todo test for collisions and damage
-        if(Physics.Raycast(new Ray(gunTip.position, direction.normalized), out var raycastHit, direction.magnitude, layerMask)) //layer 6 is shippart
+        if (Physics.Raycast(new Ray(gunTip.position, direction.normalized), out var raycastHit, direction.magnitude, new LayerMask() | (1 << LayerMask.NameToLayer("ShipPart")))) //layer 6 is shippart
         {
             var shipPart = raycastHit.collider.transform.parent.GetComponent<ShipComponent>();
 
