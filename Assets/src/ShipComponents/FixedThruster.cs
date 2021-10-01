@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class FixedThruster : ShipComponent
 {
@@ -12,6 +13,9 @@ public class FixedThruster : ShipComponent
     
     [SerializeField]
     private Transform thrustIndicator;
+
+    [SerializeField]
+    private VisualEffect thrusterSmoke;
 
     private Vector3 relativeThrustDirection;
 
@@ -83,6 +87,12 @@ public class FixedThruster : ShipComponent
         var input = MyShip.InputState.GetThrustByString(inputToWatch) * inputDirection;
 
         inputState = input > 0 ? input : 0f;
+
+        if(thrusterSmoke != null)
+        {
+            thrusterSmoke.SetFloat("Thrust", inputState);
+            thrusterSmoke.SetVector3("Global Velocity", shipBody.velocity);
+        }
     }
 
     private void FixedUpdate()
