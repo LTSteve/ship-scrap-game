@@ -34,7 +34,7 @@ public class ShipEditor : MonoBehaviour
     private float maxZoom = 15f;
     private float currentZoom = 6f;
 
-    private Dictionary<string, ShipComponent> ShipComponentPrefabDatabase = new Dictionary<string, ShipComponent>();
+    private Dictionary<string, ShipPart> ShipComponentPrefabDatabase = new Dictionary<string, ShipPart>();
 
     private int toolCount = 0;//PartCount { get; private set; } = 0;
     private int toolIndex = 0;
@@ -152,7 +152,7 @@ public class ShipEditor : MonoBehaviour
             if (colls.Any())
             {
                 var hitInfo = colls.Where(x => x.distance == colls.Min(x => x.distance)).First();
-                var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipComponent>();
+                var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipPart>();
 
                 Messenger.Default.Publish(new ShipEditorAimPayload { SelectedComponent = shipComponent, NearestBuildPoint = shipComponent.GetNearestBuildPoint(hitInfo.point) });
             }

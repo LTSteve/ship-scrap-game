@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Ship : MonoBehaviour
 {
     [SerializeField]
-    public ShipComponent ShipRoot;
+    public ShipPart ShipRoot;
 
     public InputState InputState { get; private set; } = new InputState();
 
@@ -48,13 +48,13 @@ public abstract class Ship : MonoBehaviour
 
         if (ShipRoot == null)
         {
-            var shipComponent = transform.Find("Model").GetComponentInChildren<ShipComponent>();
+            var shipComponent = transform.Find("Model").GetComponentInChildren<ShipPart>();
             if (shipComponent != null)
             {
                 var saftey = 1000;
                 while (shipComponent.Parent != null)
                 {
-                    shipComponent = (ShipComponent)shipComponent.Parent;
+                    shipComponent = (ShipPart)shipComponent.Parent;
                     saftey--;
                     if (saftey < 0) break;
                 }
@@ -69,7 +69,7 @@ public abstract class Ship : MonoBehaviour
 
         foreach (var node in nodeList)
         {
-            var component = (ShipComponent)node;
+            var component = (ShipPart)node;
 
             component.MyShip = this;
             component.ApplyShipStats(myState);
@@ -102,7 +102,7 @@ public abstract class Ship : MonoBehaviour
         return maxDist > 0f ? maxDist : 1f;
     }
 
-    public void IgnoreCollisionsWithPart(ShipComponent part)
+    public void IgnoreCollisionsWithPart(ShipPart part)
     {
         var myParts = transform.Find("Model");
 

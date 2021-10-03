@@ -2,19 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEditor;
 
-public class ShipComponent : MonoBehaviour, ITreeNode
+public class ShipPart : MonoBehaviour, ITreeNode
 {
     private Transform buildPoints;
 
     //Tree Properties
     [SerializeField]
-    private ShipComponent parent;
+    private ShipPart parent;
     [SerializeField]
-    public List<ShipComponent> children = new List<ShipComponent>();
+    public List<ShipPart> children = new List<ShipPart>();
 
-    public ShipComponent Parent { get { return parent; } set { parent = value; } }
-    public List<ShipComponent> Children { get { return children; } set { children = value; } }
+    public ShipPart Parent { get { return parent; } set { parent = value; } }
+    public List<ShipPart> Children { get { return children; } set { children = value; } }
 
     public Ship MyShip;
 
@@ -27,7 +28,7 @@ public class ShipComponent : MonoBehaviour, ITreeNode
     private float currentHealth;
 
     [SerializeField]
-    protected string prefabLocation = "ShipParts/structural block";
+    private Transform MyPrefab;
 
     private Transform scrapPrefab;
 
@@ -37,6 +38,10 @@ public class ShipComponent : MonoBehaviour, ITreeNode
 
         buildPoints = transform.Find("connectionpoints");
         scrapPrefab = (Transform)Resources.Load("Scrap", typeof(Transform));
+
+        var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(MyPrefab);
+        prefabPath = prefabPath.Substring(prefabPath.IndexOf("/Resources/") + 11);
+        Debug.Log(prefabPath.Split('.')[0]);
     }
 
     public Transform GetNearestBuildPoint(Vector3 point)
@@ -64,13 +69,15 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         return buildPoints.GetChild(index % buildPoints.childCount);
     }
 
-    public virtual void ApplyShipStats(ShipState shipState)
+    public void ApplyShipStats(ShipState shipState)
     {
         var workingCenterOfMass = shipState.CenterOfMass * shipState.Mass + transform.localPosition * Mass;
 
         shipState.Mass += Mass;
 
         shipState.CenterOfMass = workingCenterOfMass / shipState.Mass;
+
+        gameObject.SendMessage("ApplyShipStatsFromComponent", shipState);
     }
 
     public void Explode(float force = 1f, bool fullRefund = false)
@@ -125,7 +132,7 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         public string Value;
     }
 
-    public virtual List<ShipComponentData> GetData()
+    public List<ShipComponentData> GetData()
     {
         var datas = new List<ShipComponentData>();
 
@@ -133,25 +140,36 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         datas.Add(new ShipComponentData { Label = "W", Value = "" + Mass });
         datas.Add(new ShipComponentData { Label = "HP", Value = "" + Health });
 
+        gameObject.SendMessage("GetDataFromComponent", datas);
+
         return datas;
     }
 
-    public virtual void LoadPropertiesFromModel(ShipComponentModel model)
+    [ExecuteAlways]
+    public void LoadPropertiesFromModel(ShipPartModel model)
     {
-        prefabLocation = model.PrefabLocation;
+        MyPrefab = Resources.Load<Transform>(model.PrefabLocation);
 
         transform.localPosition = model.Offset;
         transform.localRotation = model.Rotation;
+
+        if(!Application.isEditor)
+            gameObject.SendMessage("LoadComponentPropertiesFromModel", model);
     }
 
-    public virtual ShipComponentModel SavePropertiesToModel()
+    public ShipPartModel SavePropertiesToModel()
     {
-        var model = new ShipComponentModel();
+        var model = new ShipPartModel();
 
-        model.PrefabLocation = prefabLocation;
+        var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(MyPrefab);
+        prefabPath = prefabPath.Substring(prefabPath.IndexOf("/Resources/") + 11);
+        model.PrefabLocation = prefabPath;
 
         model.Offset = transform.localPosition;
         model.Rotation = transform.localRotation;
+
+        if (!Application.isEditor)
+            gameObject.SendMessage("SaveComponentPropertiesToModel", model);
 
         return model;
     }
@@ -179,22 +197,22 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         Instantiate(scrapPrefab, transform.position, Quaternion.identity);
     }
 
-    public ShipComponent GetParent()
+    public ShipPart GetParent()
     {
         return Parent;
     }
 
-    public void SetParent(ShipComponent parent)
+    public void SetParent(ShipPart parent)
     {
         Parent = parent;
     }
 
-    public List<ShipComponent> GetChildren()
+    public List<ShipPart> GetChildren()
     {
         return Children;
     }
 
-    public void SetChildren(List<ShipComponent> children)
+    public void SetChildren(List<ShipPart> children)
     {
         Children = children;
     }
@@ -302,7 +320,7 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         //spawn wrecks with the resultant wreckage parts
         foreach(var wreckagePartsList in resultantWreckage)
         {
-            var firstShipComponent = (ShipComponent)wreckagePartsList[0];
+            var firstShipComponent = (ShipPart)wreckagePartsList[0];
             var newWreckageTransform = Instantiate(wreckagePrefab, firstShipComponent.transform.position, firstShipComponent.transform.rotation);
             var newWreckage = newWreckageTransform.GetComponent<Wreckage>();
 
@@ -311,7 +329,7 @@ public class ShipComponent : MonoBehaviour, ITreeNode
 
             foreach(var part in wreckagePartsList)
             {
-                var shipComponent = (ShipComponent)part;
+                var shipComponent = (ShipPart)part;
                 shipComponent.transform.parent = newWreckageModel;
                 shipComponent.MyShip = newWreckage;
             }
@@ -321,7 +339,7 @@ public class ShipComponent : MonoBehaviour, ITreeNode
         }
 
         //set new root
-        var newRoot = (ShipComponent)newShip[0];
+        var newRoot = (ShipPart)newShip[0];
         MyShip.ShipRoot = newRoot;
 
         //add some force to push the new bits away from eachother

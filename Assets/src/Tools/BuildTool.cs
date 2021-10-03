@@ -18,13 +18,13 @@ public class BuildTool : ITool
     //build data
     private int connectionPointIndex; //the build point on my new part that i want to connect to the build point target on the parttarget
     private int rotationIndex;
-    private ShipComponent currentPartTarget;
+    private ShipPart currentPartTarget;
     private Transform currentBuildPointTarget;
 
     //ghost part swap stuff
     private Material[] currentPartMaterials;
-    private ShipComponent GhostPart;
-    private ShipComponent newComponentPrefab;
+    private ShipPart GhostPart;
+    private ShipPart newComponentPrefab;
 
     //collisions
     private Vector3 currentColliderCenter;
@@ -136,7 +136,7 @@ public class BuildTool : ITool
         if (colls.Any())
         {
             var hitInfo = colls.Where(x => x.distance == colls.Min(x=>x.distance)).First();
-            var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipComponent>();
+            var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipPart>();
             aimPayload.SelectedComponent = shipComponent;
             aimPayload.NearestBuildPoint = shipComponent.GetNearestBuildPoint(hitInfo.point);
         }
@@ -220,7 +220,7 @@ public class BuildTool : ITool
         currentPartMaterials = GhostPart.GetComponentInChildren<MeshRenderer>().materials;
     }
 
-    private void _placeGhostPart(ShipComponent parentComponent, Transform buildPoint)
+    private void _placeGhostPart(ShipPart parentComponent, Transform buildPoint)
     {
         GhostPart.gameObject.SetActive(true);
         var otherBuildPoint = GhostPart.GetBuildPoint(connectionPointIndex); //the build point on our current ghost part

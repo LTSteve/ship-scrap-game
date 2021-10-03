@@ -240,6 +240,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6497106227239883274}
   - component: {fileID: 708118974144384267}
+  - component: {fileID: -4428194776927573791}
   m_Layer: 6
   m_Name: wing
   m_TagString: Untagged
@@ -277,18 +278,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79cc9db473d941f47bcd971513fb79cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thrustPoints: {fileID: 7863039257209444533}
+  Thrust: 20
+  EnergyConsumption: 0.05
+  CounterThrustDeadzone: 0.01
+--- !u!114 &-4428194776927573791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6497106227239883275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3361dcad5fc99e46ae9800990b240e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   parent: {fileID: 0}
   children: []
   MyShip: {fileID: 0}
-  Name: F Wing
-  Mass: 1
-  Price: 10
-  Health: 1
-  prefabLocation: ShipParts/mobility/wing
-  thrustPoints: {fileID: 7863039257209444533}
-  Thrust: 20
-  EnergyConsumption: 0.1
-  CounterThrustDeadzone: 0.01
+  Name: Component
+  Mass: 0.2
+  Price: 20
+  Health: 0.75
+  MyPrefab: {fileID: 6497106227239883274}
 --- !u!1 &6653710550924820348
 GameObject:
   m_ObjectHideFlags: 0

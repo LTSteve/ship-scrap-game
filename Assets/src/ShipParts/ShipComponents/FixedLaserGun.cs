@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FixedLaserGun : ShipComponent
+public class FixedLaserGun : AbstractShipComponent
 {
     public float Damage = 2f;
     public float EnergyConsumption = 2f;
@@ -11,25 +11,19 @@ public class FixedLaserGun : ShipComponent
     private Transform gunTip;
 
     private LineRenderer lineRenderer;
-    private ShipState shipState;
     private bool firing;
 
-    public override void ApplyShipStats(ShipState shipState)
+    public override void ApplyShipStatsFromComponent(ShipState shipState)
     {
-        base.ApplyShipStats(shipState);
+        base.ApplyShipStatsFromComponent(shipState);
 
-        this.shipState = shipState;
         lineRenderer = GetComponent<LineRenderer>();
     }
 
-    public override List<ShipComponentData> GetData()
+    public override void GetDataFromComponent(List<ShipPart.ShipComponentData> data)
     {
-        var toReturn = base.GetData();
-
-        toReturn.Add(new ShipComponentData { Label = "E/s", Value = "" + EnergyConsumption });
-        toReturn.Add(new ShipComponentData { Label = "DPS", Value = "" + Damage });
-
-        return toReturn;
+        data.Add(new ShipPart.ShipComponentData { Label = "E/s", Value = "" + EnergyConsumption });
+        data.Add(new ShipPart.ShipComponentData { Label = "DPS", Value = "" + Damage });
     }
 
 
@@ -67,7 +61,7 @@ public class FixedLaserGun : ShipComponent
         //todo test for collisions and damage
         if (Physics.Raycast(new Ray(gunTip.position, direction.normalized), out var raycastHit, direction.magnitude, new LayerMask() | (1 << LayerMask.NameToLayer("ShipPart")))) //layer 6 is shippart
         {
-            var shipPart = raycastHit.collider.transform.parent.GetComponent<ShipComponent>();
+            var shipPart = raycastHit.collider.transform.parent.GetComponent<ShipPart>();
 
             shipPart.DrainHealth(Damage * Time.deltaTime);
         }

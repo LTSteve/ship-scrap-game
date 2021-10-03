@@ -23,7 +23,7 @@ public static class Maths
 
         nodeList.Add(root);
 
-        var childrenList = (root.GetChildren() != null) ? new List<ShipComponent>(root.GetChildren()) : new List<ShipComponent>();
+        var childrenList = (root.GetChildren() != null) ? new List<ShipPart>(root.GetChildren()) : new List<ShipPart>();
 
         var maxIterations = 1000;
         var numIterations = 0;

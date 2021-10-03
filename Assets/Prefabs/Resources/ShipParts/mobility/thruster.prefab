@@ -262,6 +262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7352304404351348524}
   - component: {fileID: -6519601887765842704}
+  - component: {fileID: -6051700969782083640}
   m_Layer: 6
   m_Name: thruster
   m_TagString: Untagged
@@ -299,18 +300,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d899a08bea5fcd746964523bde8ac6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 0}
-  children: []
-  MyShip: {fileID: 0}
-  Name: Thruster
-  Mass: 1
-  Price: 10
-  Health: 1
-  prefabLocation: ShipParts/mobility/thruster
   Thrust: 400
   EnergyConsumption: 0.75
   thrustIndicator: {fileID: 5279901358348821712}
   thrusterSmoke: {fileID: 4462599843697393316}
+--- !u!114 &-6051700969782083640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7352304404351348525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3361dcad5fc99e46ae9800990b240e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 0}
+  children: []
+  MyShip: {fileID: 0}
+  Name: Component
+  Mass: 2
+  Price: 10
+  Health: 1.5
+  MyPrefab: {fileID: 7352304404351348524}
 --- !u!1001 &7352304403982823602
 PrefabInstance:
   m_ObjectHideFlags: 0

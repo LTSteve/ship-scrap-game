@@ -3,5 +3,5 @@ using UnityEngine;
 
 public class NewShipBuildTargetPayload
 {
-    public ShipComponent Target;
+    public ShipPart Target;
 }

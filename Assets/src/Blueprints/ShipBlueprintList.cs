@@ -8,5 +8,5 @@ using System;
 public class ShipBlueprintList : ISerializableRoot
 {
     [SerializeField]
-    public List<ShipComponentModel> Parts;
+    public List<ShipPartModel> Parts;
 }

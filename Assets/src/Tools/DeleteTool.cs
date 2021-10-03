@@ -11,7 +11,7 @@ public class DeleteTool : ITool
     private ITreeNode[] currentlyPreviewing;
     private Material[][] savedMaterials;
 
-    private ShipComponent currentPartTarget;
+    private ShipPart currentPartTarget;
 
     private bool active;
 
@@ -92,7 +92,7 @@ public class DeleteTool : ITool
         if (colls.Any())
         {
             var hitInfo = colls.Where(x => x.distance == colls.Min(x => x.distance)).First();
-            var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipComponent>();
+            var shipComponent = hitInfo.collider.transform.parent.GetComponent<ShipPart>();
             aimPayload.SelectedComponent = shipComponent;
         }
 
@@ -106,7 +106,7 @@ public class DeleteTool : ITool
         {
             if (currentlyPreviewing == null || currentlyPreviewing[0] != currentPartTarget)
             {
-                _highlight(currentPartTarget.GetComponent<ShipComponent>());
+                _highlight(currentPartTarget.GetComponent<ShipPart>());
             }
         }
         else
@@ -129,13 +129,13 @@ public class DeleteTool : ITool
 
         for (var i = 0; i < nodeList.Length; i++)
         {
-            ((ShipComponent)nodeList[i]).Explode(10f, true);
+            ((ShipPart)nodeList[i]).Explode(10f, true);
         }
 
         currentPartTarget = null;
     }
 
-    private void _highlight(ShipComponent toHighlight)
+    private void _highlight(ShipPart toHighlight)
     {
         if (currentlyPreviewing != null && currentlyPreviewing[0] != (ITreeNode)toHighlight)
         {
@@ -148,7 +148,7 @@ public class DeleteTool : ITool
         savedMaterials = new Material[nodeList.Length][];
         for(var i = 0; i < savedMaterials.Length; i++)
         {
-            savedMaterials[i] = ((ShipComponent)nodeList[i]).GetComponentInChildren<MeshRenderer>().materials;
+            savedMaterials[i] = ((ShipPart)nodeList[i]).GetComponentInChildren<MeshRenderer>().materials;
         }
 
         var newMaterials = new Material[savedMaterials.Length];
@@ -159,7 +159,7 @@ public class DeleteTool : ITool
 
         foreach(var previewee in currentlyPreviewing)
         {
-            ((ShipComponent)previewee).GetComponentInChildren<MeshRenderer>().materials = newMaterials;
+            ((ShipPart)previewee).GetComponentInChildren<MeshRenderer>().materials = newMaterials;
         }
 
     }
@@ -170,7 +170,7 @@ public class DeleteTool : ITool
 
         for(var i = 0; i < toUnHighlight.Length; i++)
         {
-            ((ShipComponent)toUnHighlight[i]).GetComponentInChildren<MeshRenderer>().materials = savedMaterials[i];
+            ((ShipPart)toUnHighlight[i]).GetComponentInChildren<MeshRenderer>().materials = savedMaterials[i];
         }
     }
 }

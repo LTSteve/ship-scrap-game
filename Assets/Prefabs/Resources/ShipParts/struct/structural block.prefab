@@ -241,6 +241,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6497106227239883274}
   - component: {fileID: -7321731304446951710}
+  - component: {fileID: -1884758341887120314}
   m_Layer: 6
   m_Name: structural block
   m_TagString: Untagged
@@ -277,15 +278,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 407f2fcb9b358024880b9b5dda261260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnergyCapacity: 1
+--- !u!114 &-1884758341887120314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6497106227239883275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3361dcad5fc99e46ae9800990b240e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   parent: {fileID: 0}
   children: []
   MyShip: {fileID: 0}
-  Name: Struct
+  Name: Component
   Mass: 1
   Price: 10
-  Health: 1
-  prefabLocation: ShipParts/struct/structural block
-  EnergyCapacity: 1
+  Health: 2
+  MyPrefab: {fileID: 6497106227239883274}
 --- !u!1 &6767775810254372654
 GameObject:
   m_ObjectHideFlags: 0

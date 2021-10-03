@@ -8,7 +8,7 @@ public class ItemInfo : MonoBehaviour
     public Transform DataPrefab;
     public Text Name;
 
-    public void Data(ShipComponent component)
+    public void Data(ShipPart component)
     {
         Name.text = component.Name;
 

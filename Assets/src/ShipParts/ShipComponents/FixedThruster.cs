@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class FixedThruster : ShipComponent
+public class FixedThruster : AbstractShipComponent
 {
     public float Thrust = 8f;
 
     public float EnergyConsumption = 0.25f;
 
-    private ShipState shipState;
-    
     [SerializeField]
     private Transform thrustIndicator;
 
@@ -27,11 +25,9 @@ public class FixedThruster : ShipComponent
 
     private Rigidbody shipBody;
 
-    public override void ApplyShipStats(ShipState shipState)
+    public override void ApplyShipStatsFromComponent(ShipState shipState)
     {
-        base.ApplyShipStats(shipState);
-
-        this.shipState = shipState;
+        base.ApplyShipStatsFromComponent(shipState);
 
         relativeThrustDirection = Maths.CardinalizeVector(Quaternion.Inverse(MyShip.ShipRoot.transform.rotation) * thrustIndicator.rotation * Vector3.forward);
 
@@ -69,14 +65,10 @@ public class FixedThruster : ShipComponent
         shipBody = MyShip.GetComponent<Rigidbody>();
     }
 
-    public override List<ShipComponentData> GetData()
+    public override void GetDataFromComponent(List<ShipPart.ShipComponentData> data)
     {
-        var toReturn = base.GetData();
-
-        toReturn.Add(new ShipComponentData { Label = "E/s", Value = "" + EnergyConsumption });
-        toReturn.Add(new ShipComponentData { Label = "Tr", Value = "" + Thrust });
-
-        return toReturn;
+        data.Add(new ShipPart.ShipComponentData { Label = "E/s", Value = "" + EnergyConsumption });
+        data.Add(new ShipPart.ShipComponentData { Label = "Tr", Value = "" + Thrust });
     }
 
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gyrostabilizer : ShipComponent
+public class Gyrostabilizer : AbstractShipComponent
 {
     public float MaxTorque = 10f;
 
@@ -16,16 +16,20 @@ public class Gyrostabilizer : ShipComponent
     private bool gyrosActive;
 
     private Rigidbody shipRigidBody;
-    private ShipState shipState;
 
-    public override void ApplyShipStats(ShipState shipState)
+    public override void ApplyShipStatsFromComponent(ShipState shipState)
     {
-        base.ApplyShipStats(shipState);
-
-        this.shipState = shipState;
+        base.ApplyShipStatsFromComponent(shipState);
 
         shipRigidBody = MyShip.GetComponent<Rigidbody>();
     }
+
+    public override void GetDataFromComponent(List<ShipPart.ShipComponentData> data)
+    {
+        data.Add(new ShipPart.ShipComponentData { Label = "E/s", Value = "" + MaxEnergyDrain });
+        data.Add(new ShipPart.ShipComponentData { Label = "Tq", Value = "" + MaxTorque });
+    }
+
 
     private void Update()
     {
@@ -60,16 +64,6 @@ public class Gyrostabilizer : ShipComponent
         shipState.CurrentPower -= energyCapacityUsed;
 
         shipRigidBody.AddRelativeTorque(torqueTarget * Time.fixedDeltaTime, ForceMode.Force);
-    }
-
-    public override List<ShipComponentData> GetData()
-    {
-        var toReturn = base.GetData();
-
-        toReturn.Add(new ShipComponentData { Label = "E/s", Value = "" + MaxEnergyDrain });
-        toReturn.Add(new ShipComponentData { Label = "Tq", Value = "" + MaxTorque });
-
-        return toReturn;
     }
 
     private Vector3 _generateStabilizationAngularVelocity()

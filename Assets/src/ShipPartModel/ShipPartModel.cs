@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ShipComponentModel
+public class ShipPartModel
 {
     public string PrefabLocation;
     public Vector3 Offset;

@@ -146,6 +146,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5564065946374508958}
   - component: {fileID: 9131048462017738440}
+  - component: {fileID: 3804977850333803703}
+  - component: {fileID: -7616954161098968131}
   m_Layer: 6
   m_Name: inline cockpit
   m_TagString: Untagged
@@ -182,17 +184,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ec1e91e477123d419ca61e6145b0689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3804977850333803703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5564065946374508957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07ad35ea0e31b624b8860c489f957637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxTorque: 75
+  MaxEnergyDrain: 0.02
+  StabilizationDeadzone: 0.01
+--- !u!114 &-7616954161098968131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5564065946374508957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3361dcad5fc99e46ae9800990b240e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   parent: {fileID: 0}
   children: []
   MyShip: {fileID: 0}
-  Name: I2 Pit
-  Mass: 0.5
-  Price: 100
+  Name: Cockpit M2
+  Mass: 1
+  Price: 15
   Health: 1
-  prefabLocation: ShipParts/cockpit/inline cockpit
-  MaxTorque: 100
-  MaxEnergyDrain: 0.05
-  StabilizationDeadzone: 0.01
+  MyPrefab: {fileID: 5564065946374508958}
 --- !u!1 &5564065947489975052
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,5 +3,5 @@ using UnityEngine;
 
 public class BuildItemSelectedPayload
 {
-    public ShipComponent SelectedComponent;
+    public ShipPart SelectedComponent;
 }

@@ -3,6 +3,6 @@ using UnityEngine;
 
 public class ShipEditorAimPayload
 {
-    public ShipComponent SelectedComponent;
+    public ShipPart SelectedComponent;
     public Transform NearestBuildPoint;
 }

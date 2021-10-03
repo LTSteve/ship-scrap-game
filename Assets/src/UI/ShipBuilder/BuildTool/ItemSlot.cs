@@ -15,7 +15,7 @@ public class ItemSlot : MonoBehaviour
 
     private Quaternion defaultItemRotation;
 
-    private ShipComponent component;
+    private ShipPart component;
 
     [SerializeField]
     private ItemInfo myInfo;
@@ -25,7 +25,7 @@ public class ItemSlot : MonoBehaviour
         Messenger.Default.Subscribe<ShipEditorToolInputPayload>(_toggleInfo, (payload) => { return payload.InputType == ShipEditorToolInputPayload.ToolInputType.RightStickClick; });
     }
 
-    public void SetComponent(ShipComponent comp)
+    public void SetComponent(ShipPart comp)
     {
         component = comp;
 

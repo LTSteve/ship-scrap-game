@@ -84,6 +84,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShipRoot: {fileID: 0}
+  myState:
+    Paused: 0
+    MaxPower: 0
+    CurrentPower: 0
+    EnergyGeneration: 0
+    HasBridge: 0
+    Mass: 0
+    CenterOfMass: {x: 0, y: 0, z: 0}
   CameraPosition: {fileID: 3695554577068275957}
   CameraTarget: {fileID: 3695554576147361079}
 --- !u!54 &3695554576012367985
@@ -114,10 +122,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85ed92e6ab9c8cf48ba93a99caa0d7fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlueprintJSON: '{"Items":[{"PrefabLocation":"ShipParts/struct/structural block","Offset":{"x":0.0,"y":0.0,"z":0.0},"Rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"TreeAddress":""}]}'
+  BlueprintTJSON: {fileID: 0}
   RecalculateBlueprint: 0
   SaveBlueprint: 0
-  shipRoot: {fileID: 0}
 --- !u!114 &3695554577742272484
 MonoBehaviour:
   m_ObjectHideFlags: 0

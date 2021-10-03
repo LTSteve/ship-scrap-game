@@ -13,8 +13,7 @@ public class ShipBlueprintManager : MonoBehaviour
     public bool SaveBlueprint;
 
     private Transform modelParent;
-    [SerializeField]
-    private ShipComponent shipRoot;
+    private ShipPart shipRoot;
 
     private void Awake()
     {
@@ -30,15 +29,11 @@ public class ShipBlueprintManager : MonoBehaviour
     {
         if (RecalculateBlueprint)
         {
-            List<ShipComponentModel> blueprint;
+            List<ShipPartModel> blueprint = null;
             try
             {
                 blueprint = ((ShipBlueprintList)TJSONParser.Parse(BlueprintTJSON.Data)).Parts;
-            }
-            catch
-            {
-                return;
-            }
+            } catch {}
 
             if (blueprint != null && blueprint.Count > 0)
             {
@@ -54,14 +49,35 @@ public class ShipBlueprintManager : MonoBehaviour
 
         if (SaveBlueprint)
         {
-            if (shipRoot == null) return;
+            if(BlueprintTJSON == null)
+            {
+                //TODO: make one?
+
+                SaveBlueprint = false;
+                return;
+            }
+
+            if (shipRoot == null) {
+                if(modelParent.childCount == 0)
+                {
+                    SaveBlueprint = false;
+                    return;
+                }
+
+                var shipPart = modelParent.GetChild(0).GetComponent<ShipPart>();
+                while(shipPart.Parent != null)
+                {
+                    shipPart = shipPart.Parent;
+                }
+                shipRoot = shipPart;
+            }
 
             var genericBlueprint = Maths.CreateTreeNodeList(shipRoot);
 
-            List<ShipComponentModel> blueprint = new List<ShipComponentModel>();
+            List<ShipPartModel> blueprint = new List<ShipPartModel>();
             for(var i = 0; i < genericBlueprint.Length; i++)
             {
-                blueprint.Add(((ShipComponent)genericBlueprint[i]).SavePropertiesToModel());
+                blueprint.Add(((ShipPart)genericBlueprint[i]).SavePropertiesToModel());
                 blueprint[i].TreeAddress = genericBlueprint[i].GetTreeAddress();
             }
 
@@ -99,7 +115,7 @@ public class ShipBlueprintManager : MonoBehaviour
         }
     }
 
-    private ShipComponent _buildShip(List<ShipComponentModel> componentModels)
+    private ShipPart _buildShip(List<ShipPartModel> componentModels)
     {
         BlueprintTree tree = new BlueprintTree();
 
@@ -111,9 +127,9 @@ public class ShipBlueprintManager : MonoBehaviour
         return tree.Root;
     }
 
-    private void _buildComponent(ShipComponentModel model, BlueprintTree tree)
+    private void _buildComponent(ShipPartModel model, BlueprintTree tree)
     {
-        var component = Instantiate((ShipComponent)Resources.Load(model.PrefabLocation, typeof(ShipComponent)), modelParent);
+        var component = Instantiate((ShipPart)Resources.Load(model.PrefabLocation, typeof(ShipPart)), modelParent);
 
         tree.AddToTree(component, model.TreeAddress);
 
@@ -122,11 +138,11 @@ public class ShipBlueprintManager : MonoBehaviour
 
     private class BlueprintTree
     {
-        public ShipComponent Root;
+        public ShipPart Root;
 
-        private List<ShipComponent> data = new List<ShipComponent>();
+        private List<ShipPart> data = new List<ShipPart>();
 
-        public void AddToTree(ShipComponent component, string address)
+        public void AddToTree(ShipPart component, string address)
         {
             if (string.IsNullOrEmpty(address))
             {
@@ -150,7 +166,7 @@ public class ShipBlueprintManager : MonoBehaviour
                 }
                 else
                 {
-                    crawlerNode = (ShipComponent) crawlerNode.Children[nextIndex];
+                    crawlerNode = (ShipPart) crawlerNode.Children[nextIndex];
                 }
 
                 address = address.Substring(1);

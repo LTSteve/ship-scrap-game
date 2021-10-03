@@ -17,18 +17,18 @@ public class ItemShop : MonoBehaviour
 
     public Transform ItemsList;
 
-    private Dictionary<ShipComponent, Transform> itemsRef = new Dictionary<ShipComponent, Transform>();
+    private Dictionary<ShipPart, Transform> itemsRef = new Dictionary<ShipPart, Transform>();
 
     private void Start()
     {
         for(var i = 0; i < partSubdirectories.Count; i++)
         {
             var partSubdirectory = partSubdirectories[i];
-            var parts = Resources.LoadAll("ShipParts/" + partSubdirectory, typeof(ShipComponent));
+            var parts = Resources.LoadAll("ShipParts/" + partSubdirectory, typeof(ShipPart));
 
             for (var j = 0; j < parts.Length; j++)
             {
-                var p = (ShipComponent)parts[j];
+                var p = (ShipPart)parts[j];
 
                 itemsRef[p] = _spawnModel(p, new Vector2Int(i, j));
             }
@@ -40,7 +40,7 @@ public class ItemShop : MonoBehaviour
         }
     }
 
-    private Transform _spawnModel(ShipComponent p, Vector2Int position)
+    private Transform _spawnModel(ShipPart p, Vector2Int position)
     {
         var model = Instantiate(p.transform.Find("modelscale"), ItemsList);
         model.localScale = Vector3.one * 0.125f;
@@ -48,7 +48,7 @@ public class ItemShop : MonoBehaviour
         return model;
     }
 
-    public Transform GetModel(ShipComponent component)
+    public Transform GetModel(ShipPart component)
     {
         return itemsRef[component];
     }

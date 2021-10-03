@@ -144,7 +144,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8537687653117257339}
-  - component: {fileID: 6967457742925536436}
+  - component: {fileID: 7838977605629503439}
   - component: {fileID: 141985279710502635}
   m_Layer: 6
   m_Name: gimbaled multicanon
@@ -171,7 +171,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6967457742925536436
+--- !u!114 &7838977605629503439
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,21 +180,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8537687653117257338}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a802e9a8e9003e64fb10151ad398a2b3, type: 3}
+  m_Script: {fileID: 11500000, guid: c3361dcad5fc99e46ae9800990b240e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 0}
   children: []
   MyShip: {fileID: 0}
-  Name: GM C01
+  Name: Component
   Mass: 1
   Price: 10
   Health: 1
-  prefabLocation: ShipParts/guns/gimbaled multicanon
-  Damage: 2
-  EnergyConsumption: 2
-  crosshairs: {fileID: 0}
-  gunTip: {fileID: 9032800692486404789}
+  MyPrefab: {fileID: 8537687653117257339}
 --- !u!120 &141985279710502635
 LineRenderer:
   m_ObjectHideFlags: 0

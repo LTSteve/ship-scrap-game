@@ -29,12 +29,12 @@ public class BuildCategoryPanel : MonoBehaviour
     {
         rectTransform = GetComponent<RectTransform>();
 
-        var parts = Resources.LoadAll(shipPartSubdirectory, typeof(ShipComponent));
+        var parts = Resources.LoadAll(shipPartSubdirectory, typeof(ShipPart));
         foreach (var p in parts)
         {
             var newSlot = Instantiate(ItemSlotPrefab, content);
 
-            newSlot.SetComponent(((ShipComponent)p));
+            newSlot.SetComponent(((ShipPart)p));
         }
     }
 

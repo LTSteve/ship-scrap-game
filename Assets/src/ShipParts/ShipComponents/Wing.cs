@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wing : ShipComponent
+public class Wing : AbstractShipComponent
 {
-    private ShipState shipState;
-
     private Rigidbody shipBody;
 
     [SerializeField]
@@ -17,11 +15,9 @@ public class Wing : ShipComponent
 
     private WingThruster[] thrusters;
 
-    public override void ApplyShipStats(ShipState shipState)
+    public override void ApplyShipStatsFromComponent(ShipState shipState)
     {
-        base.ApplyShipStats(shipState);
-
-        this.shipState = shipState;
+        base.ApplyShipStatsFromComponent(shipState);
 
         shipBody = MyShip.GetComponent<Rigidbody>();
 
@@ -71,14 +67,10 @@ public class Wing : ShipComponent
         }
     }
 
-    public override List<ShipComponentData> GetData()
+    public override void GetDataFromComponent(List<ShipPart.ShipComponentData> data)
     {
-        var toReturn = base.GetData();
-
-        toReturn.Add(new ShipComponentData { Label = "E/s", Value = "" + EnergyConsumption * 2 });
-        toReturn.Add(new ShipComponentData { Label = "Tr", Value = "" + Thrust * 2 });
-
-        return toReturn;
+        data.Add(new ShipPart.ShipComponentData { Label = "E/s", Value = "" + EnergyConsumption * 2 });
+        data.Add(new ShipPart.ShipComponentData { Label = "Tr", Value = "" + Thrust * 2 });
     }
 
     private class WingThruster

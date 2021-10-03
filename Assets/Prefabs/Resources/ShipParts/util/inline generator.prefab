@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 893774983954906319}
   - component: {fileID: 2023460610102540305}
+  - component: {fileID: -8516597083160025411}
   m_Layer: 6
   m_Name: inline generator
   m_TagString: Untagged
@@ -77,15 +78,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2680456fac360e34a814bfae821c06c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnergyProduction: 12
+--- !u!114 &-8516597083160025411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893774983954906318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3361dcad5fc99e46ae9800990b240e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   parent: {fileID: 0}
   children: []
   MyShip: {fileID: 0}
-  Name: Gen02
-  Mass: 1
-  Price: 10
-  Health: 1
-  prefabLocation: ShipParts/util/inline generator
-  EnergyProduction: 50
+  Name: Component
+  Mass: 1.4
+  Price: 30
+  Health: 2
+  MyPrefab: {fileID: 893774983954906319}
 --- !u!1 &2489688186709850781
 GameObject:
   m_ObjectHideFlags: 0
