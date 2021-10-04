@@ -214,8 +214,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d899a08bea5fcd746964523bde8ac6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Thrust: 400
-  EnergyConsumption: 0.75
+  Thrust: 100
+  EnergyConsumption: 0.1
   thrustIndicator: {fileID: 5279901358348821712}
   thrusterSmoke: {fileID: 0}
 --- !u!114 &758611432339610469
@@ -234,9 +234,9 @@ MonoBehaviour:
   children: []
   MyShip: {fileID: 0}
   Name: Component
-  Mass: 1
+  Mass: 0.5
   Price: 10
-  Health: 1
+  Health: 0.5
   prefabPath: ShipParts/mobility/flat impulse thruster
 --- !u!1001 &6848702925283522783
 PrefabInstance:
