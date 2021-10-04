@@ -190,7 +190,7 @@ MonoBehaviour:
   Mass: 1
   Price: 10
   Health: 1
-  MyPrefab: {fileID: 8537687653117257339}
+  prefabPath: ShipParts/guns/semigimbaled laser
 --- !u!120 &141985279710502635
 LineRenderer:
   m_ObjectHideFlags: 0

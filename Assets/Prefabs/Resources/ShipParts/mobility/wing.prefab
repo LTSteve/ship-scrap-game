@@ -301,7 +301,7 @@ MonoBehaviour:
   Mass: 0.2
   Price: 20
   Health: 0.75
-  MyPrefab: {fileID: 6497106227239883274}
+  prefabPath: ShipParts/mobility/wing
 --- !u!1 &6653710550924820348
 GameObject:
   m_ObjectHideFlags: 0

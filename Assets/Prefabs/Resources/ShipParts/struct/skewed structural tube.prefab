@@ -328,7 +328,7 @@ MonoBehaviour:
   Mass: 6
   Price: 30
   Health: 5
-  MyPrefab: {fileID: 6497106227239883274}
+  prefabPath: ShipParts/struct/skewed structural tube
 --- !u!1 &7856545468381000541
 GameObject:
   m_ObjectHideFlags: 0

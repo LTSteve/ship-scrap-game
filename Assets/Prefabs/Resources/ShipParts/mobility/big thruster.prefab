@@ -319,7 +319,7 @@ MonoBehaviour:
   Mass: 1
   Price: 10
   Health: 1
-  MyPrefab: {fileID: 7352304404351348524}
+  prefabPath: ShipParts/mobility/big thruster
 --- !u!1001 &6377710667137424146
 PrefabInstance:
   m_ObjectHideFlags: 0

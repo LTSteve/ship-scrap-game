@@ -98,7 +98,7 @@ MonoBehaviour:
   Mass: 0.75
   Price: 10
   Health: 1
-  MyPrefab: {fileID: 893774983954906319}
+  prefabPath: ShipParts/util/generator
 --- !u!1 &5299473352270802989
 GameObject:
   m_ObjectHideFlags: 0

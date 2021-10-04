@@ -802,7 +802,7 @@ MonoBehaviour:
   Mass: 8
   Price: 50
   Health: 6
-  MyPrefab: {fileID: 6497106227239883274}
+  prefabPath: ShipParts/struct/large quad strct block
 --- !u!1 &6701696332736129106
 GameObject:
   m_ObjectHideFlags: 0

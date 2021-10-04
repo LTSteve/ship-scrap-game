@@ -298,7 +298,7 @@ MonoBehaviour:
   Mass: 1
   Price: 10
   Health: 2
-  MyPrefab: {fileID: 6497106227239883274}
+  prefabPath: ShipParts/struct/structural block
 --- !u!1 &6767775810254372654
 GameObject:
   m_ObjectHideFlags: 0

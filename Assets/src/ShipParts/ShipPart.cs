@@ -28,7 +28,7 @@ public class ShipPart : MonoBehaviour, ITreeNode
     private float currentHealth;
 
     [SerializeField]
-    private Transform MyPrefab;
+    private string prefabPath;
 
     private Transform scrapPrefab;
 
@@ -38,10 +38,6 @@ public class ShipPart : MonoBehaviour, ITreeNode
 
         buildPoints = transform.Find("connectionpoints");
         scrapPrefab = (Transform)Resources.Load("Scrap", typeof(Transform));
-
-        var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(MyPrefab);
-        prefabPath = prefabPath.Substring(prefabPath.IndexOf("/Resources/") + 11);
-        Debug.Log(prefabPath.Split('.')[0]);
     }
 
     public Transform GetNearestBuildPoint(Vector3 point)
@@ -64,7 +60,7 @@ public class ShipPart : MonoBehaviour, ITreeNode
 
     public Transform GetBuildPoint(int index)
     {
-        if(index < 0) { return null; }
+        if (index < 0) { return null; }
 
         return buildPoints.GetChild(index % buildPoints.childCount);
     }
@@ -77,7 +73,7 @@ public class ShipPart : MonoBehaviour, ITreeNode
 
         shipState.CenterOfMass = workingCenterOfMass / shipState.Mass;
 
-        gameObject.SendMessage("ApplyShipStatsFromComponent", shipState);
+        gameObject.SendMessage("ApplyShipStatsFromComponent", shipState, SendMessageOptions.DontRequireReceiver);
     }
 
     public void Explode(float force = 1f, bool fullRefund = false)
@@ -140,36 +136,33 @@ public class ShipPart : MonoBehaviour, ITreeNode
         datas.Add(new ShipComponentData { Label = "W", Value = "" + Mass });
         datas.Add(new ShipComponentData { Label = "HP", Value = "" + Health });
 
-        gameObject.SendMessage("GetDataFromComponent", datas);
+        gameObject.SendMessage("GetDataFromComponent", datas, SendMessageOptions.DontRequireReceiver);
 
         return datas;
     }
 
-    [ExecuteAlways]
     public void LoadPropertiesFromModel(ShipPartModel model)
     {
-        MyPrefab = Resources.Load<Transform>(model.PrefabLocation);
+        prefabPath = model.PrefabLocation;
 
         transform.localPosition = model.Offset;
         transform.localRotation = model.Rotation;
 
         if(!Application.isEditor)
-            gameObject.SendMessage("LoadComponentPropertiesFromModel", model);
+            gameObject.SendMessage("LoadComponentPropertiesFromModel", model, SendMessageOptions.DontRequireReceiver);
     }
 
     public ShipPartModel SavePropertiesToModel()
     {
         var model = new ShipPartModel();
 
-        var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(MyPrefab);
-        prefabPath = prefabPath.Substring(prefabPath.IndexOf("/Resources/") + 11);
         model.PrefabLocation = prefabPath;
 
         model.Offset = transform.localPosition;
         model.Rotation = transform.localRotation;
 
         if (!Application.isEditor)
-            gameObject.SendMessage("SaveComponentPropertiesToModel", model);
+            gameObject.SendMessage("SaveComponentPropertiesToModel", model, SendMessageOptions.DontRequireReceiver);
 
         return model;
     }

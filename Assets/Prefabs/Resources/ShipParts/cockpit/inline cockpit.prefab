@@ -218,7 +218,7 @@ MonoBehaviour:
   Mass: 1
   Price: 15
   Health: 1
-  MyPrefab: {fileID: 5564065946374508958}
+  prefabPath: ShipParts/cockpit/inline cockpit
 --- !u!1 &5564065947489975052
 GameObject:
   m_ObjectHideFlags: 0

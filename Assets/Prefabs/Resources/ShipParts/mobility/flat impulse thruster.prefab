@@ -237,7 +237,7 @@ MonoBehaviour:
   Mass: 1
   Price: 10
   Health: 1
-  MyPrefab: {fileID: 7352304404351348524}
+  prefabPath: ShipParts/mobility/flat impulse thruster
 --- !u!1001 &6848702925283522783
 PrefabInstance:
   m_ObjectHideFlags: 0
