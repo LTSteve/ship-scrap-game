@@ -407,7 +407,7 @@
                 {
                     "name": "positive",
                     "id": "9506158c-944b-4602-801b-a7bd65924307",
-                    "path": "<Gamepad>/leftStick/up",
+                    "path": "<Gamepad>/rightStick/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",

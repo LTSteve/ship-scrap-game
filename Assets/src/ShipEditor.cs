@@ -98,6 +98,12 @@ public class ShipEditor : MonoBehaviour
         {
             zooming = false;
             MoveTarget = Vector2.zero;
+
+            var blueprintManager = Player.GetComponent<ShipBlueprintManager>();
+            if(blueprintManager != null && blueprintManager.AutoSave)
+            {
+                blueprintManager.SaveBlueprint();
+            }
         }
 
         _initializeUI(active);

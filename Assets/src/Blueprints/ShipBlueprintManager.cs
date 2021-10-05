@@ -9,8 +9,7 @@ public class ShipBlueprintManager : MonoBehaviour
 {
     public TJSON BlueprintTJSON;
 
-    public bool RecalculateBlueprint;
-    public bool SaveBlueprint;
+    public bool AutoSave = true;
 
     private Transform modelParent;
     private ShipPart shipRoot;
@@ -20,75 +19,56 @@ public class ShipBlueprintManager : MonoBehaviour
         modelParent = transform.Find("Model");
     }
 
-    private void Start()
+    public void SaveBlueprint()
     {
-        RecalculateBlueprint = true;
-    }
-
-    private void Update()
-    {
-        if (RecalculateBlueprint)
+        if (shipRoot == null)
         {
-            List<ShipPartModel> blueprint = null;
-            try
+            if (modelParent.childCount == 0)
             {
-                blueprint = ((ShipBlueprintList)TJSONParser.Parse(BlueprintTJSON.Data)).Parts;
-            } catch {}
-
-            if (blueprint != null && blueprint.Count > 0)
-            {
-                _clearCurrentShip();
-
-                shipRoot = _buildShip(blueprint);
-
-                GetComponent<Ship>().ShipRoot = shipRoot;
-            }
-
-            RecalculateBlueprint = false;
-        }
-
-        if (SaveBlueprint)
-        {
-            if(BlueprintTJSON == null)
-            {
-                //TODO: make one?
-
-                SaveBlueprint = false;
                 return;
             }
 
-            if (shipRoot == null) {
-                if(modelParent.childCount == 0)
-                {
-                    SaveBlueprint = false;
-                    return;
-                }
-
-                var shipPart = modelParent.GetChild(0).GetComponent<ShipPart>();
-                while(shipPart.Parent != null)
-                {
-                    shipPart = shipPart.Parent;
-                }
-                shipRoot = shipPart;
-            }
-
-            var genericBlueprint = Maths.CreateTreeNodeList(shipRoot);
-
-            List<ShipPartModel> blueprint = new List<ShipPartModel>();
-            for(var i = 0; i < genericBlueprint.Length; i++)
+            var shipPart = modelParent.GetChild(0).GetComponent<ShipPart>();
+            while (shipPart.Parent != null)
             {
-                blueprint.Add(((ShipPart)genericBlueprint[i]).SavePropertiesToModel());
-                blueprint[i].TreeAddress = genericBlueprint[i].GetTreeAddress();
+                shipPart = shipPart.Parent;
             }
+            shipRoot = shipPart;
+        }
 
-            BlueprintTJSON.Data = TJSONParser.Encode(new ShipBlueprintList() { Parts = blueprint });
+        var genericBlueprint = Maths.CreateTreeNodeList(shipRoot);
 
-            GUIUtility.systemCopyBuffer = BlueprintTJSON.Data;
+        List<ShipPartModel> blueprint = new List<ShipPartModel>();
+        for (var i = 0; i < genericBlueprint.Length; i++)
+        {
+            blueprint.Add(((ShipPart)genericBlueprint[i]).SavePropertiesToModel());
+            blueprint[i].TreeAddress = genericBlueprint[i].GetTreeAddress();
+        }
 
-            EditorUtility.SetDirty(BlueprintTJSON);
-            AssetDatabase.SaveAssets();
+        BlueprintTJSON.Data = TJSONParser.Encode(new ShipBlueprintList() { Parts = blueprint });
 
-            SaveBlueprint = false;
+        GUIUtility.systemCopyBuffer = BlueprintTJSON.Data;
+
+        EditorUtility.SetDirty(BlueprintTJSON);
+        AssetDatabase.SaveAssets();
+    }
+
+    public void RecalculateBlueprint()
+    {
+        List<ShipPartModel> blueprint = null;
+        try
+        {
+            blueprint = ((ShipBlueprintList)TJSONParser.Parse(BlueprintTJSON.Data)).Parts;
+        }
+        catch { }
+
+        if (blueprint != null && blueprint.Count > 0)
+        {
+            _clearCurrentShip();
+
+            shipRoot = _buildShip(blueprint);
+
+            GetComponent<Ship>().ShipRoot = shipRoot;
         }
     }
 
