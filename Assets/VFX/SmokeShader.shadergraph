@@ -2,7 +2,11 @@
     "m_SGVersion": 2,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "b452e13528184b33bfb10af13e5d15af",
-    "m_Properties": [],
+    "m_Properties": [
+        {
+            "m_Id": "d760e18e1ec041eeb547d676c96966a5"
+        }
+    ],
     "m_Keywords": [],
     "m_Nodes": [
         {
@@ -13,11 +17,29 @@
         },
         {
             "m_Id": "c8b48643dd0a4d4a9fa8ab542317ede6"
+        },
+        {
+            "m_Id": "e4411954c5c147b1b10372f564736a82"
         }
     ],
     "m_GroupDatas": [],
     "m_StickyNoteDatas": [],
-    "m_Edges": [],
+    "m_Edges": [
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "e4411954c5c147b1b10372f564736a82"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "97bc7adba88f49aeac8169baadf6700a"
+                },
+                "m_SlotId": 0
+            }
+        }
+    ],
     "m_VertexContext": {
         "m_Position": {
             "x": 0.0,
@@ -212,6 +234,21 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "a889c66401b14990abd055b46a473540",
+    "m_Id": 0,
+    "m_DisplayName": "InAlphaOverLifetime",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.BlockNode",
     "m_ObjectId": "c8b48643dd0a4d4a9fa8ab542317ede6",
     "m_Group": {
@@ -241,5 +278,63 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "SurfaceDescription.Emission"
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "d760e18e1ec041eeb547d676c96966a5",
+    "m_Guid": {
+        "m_GuidSerialized": "87dfd07e-fb6b-47de-a69a-f7c7c745fdf7"
+    },
+    "m_Name": "InAlphaOverLifetime",
+    "m_DefaultReferenceName": "Vector1_d760e18e1ec041eeb547d676c96966a5",
+    "m_OverrideReferenceName": "InAlphaOverLifetime",
+    "m_GeneratePropertyBlock": true,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 1.0,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "e4411954c5c147b1b10372f564736a82",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -194.0,
+            "y": 287.0,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "a889c66401b14990abd055b46a473540"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "d760e18e1ec041eeb547d676c96966a5"
+    }
 }
 

@@ -206,7 +206,7 @@ MonoBehaviour:
   Mass: 1.5
   Price: 10
   Health: 5
-  prefabPath: ShipParts/guns/gimbaled multicanon
+  prefabPath: ShipParts/guns/gun
 --- !u!120 &141985279710502635
 LineRenderer:
   m_ObjectHideFlags: 0

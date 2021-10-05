@@ -23,14 +23,14 @@ MonoBehaviour:
     block","Offset":"(-2.0, 0.0, 0.0)","Rotation":"(0.0, 0.0, 0.0, -1.0)","TreeAddress":"00"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/util/generator","Offset":"(-1.0,
     0.0, -1.0)","Rotation":"(0.0, -1.0, 0.0, 0.0)","TreeAddress":"01"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/struct/structural
     block","Offset":"(2.0, 0.0, 0.0)","Rotation":"(0.0, -1.0, 0.0, 0.0)","TreeAddress":"10"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/util/generator","Offset":"(1.0,
-    0.0, -1.0)","Rotation":"(0.0, 1.0, 0.0, 0.0)","TreeAddress":"11"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/guns/gimbaled
-    multicanon","Offset":"(0.0, 0.0, 2.0)","Rotation":"(0.0, 0.0, 0.0, 1.0)","TreeAddress":"40"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(0.0,
+    0.0, -1.0)","Rotation":"(0.0, 1.0, 0.0, 0.0)","TreeAddress":"11"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/guns/gun","Offset":"(0.0,
+    0.0, 2.0)","Rotation":"(0.0, 0.0, 0.0, 1.0)","TreeAddress":"40"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(0.0,
     0.0, -2.8)","Rotation":"(0.0, 1.0, 0.0, 0.0)","TreeAddress":"50"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/struct/structural
     block","Offset":"(-3.0, 0.0, 0.0)","Rotation":"(0.0, 0.0, 0.0, 1.0)","TreeAddress":"000"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/struct/structural
     block","Offset":"(3.0, 0.0, 0.0)","Rotation":"(0.0, 1.0, 0.0, 0.0)","TreeAddress":"100"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(-4.0,
-    0.0, 0.0)","Rotation":"(0.0, 0.7, 0.0, -0.7)","TreeAddress":"0000"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/guns/gimbaled
-    multicanon","Offset":"(-3.0, 0.0, 1.0)","Rotation":"(0.0, 0.0, 0.0, 1.0)","TreeAddress":"0001"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(-3.0,
+    0.0, 0.0)","Rotation":"(0.0, 0.7, 0.0, -0.7)","TreeAddress":"0000"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/guns/gun","Offset":"(-3.0,
+    0.0, 1.0)","Rotation":"(0.0, 0.0, 0.0, 1.0)","TreeAddress":"0001"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(-3.0,
     0.0, -1.0)","Rotation":"(0.0, 1.0, 0.0, 0.0)","TreeAddress":"0002"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(4.0,
-    0.0, 0.0)","Rotation":"(0.0, -0.7, 0.0, -0.7)","TreeAddress":"1000"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/guns/gimbaled
-    multicanon","Offset":"(3.0, 0.0, 1.0)","Rotation":"(0.0, 0.0, 0.0, -1.0)","TreeAddress":"1001"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(3.0,
+    0.0, 0.0)","Rotation":"(0.0, -0.7, 0.0, -0.7)","TreeAddress":"1000"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/guns/gun","Offset":"(3.0,
+    0.0, 1.0)","Rotation":"(0.0, 0.0, 0.0, -1.0)","TreeAddress":"1001"},{".OBJECTTYPE":"ShipPartModel","PrefabLocation":"ShipParts/mobility/thruster","Offset":"(3.0,
     0.0, -1.0)","Rotation":"(0.0, 1.0, 0.0, 0.0)","TreeAddress":"1002"}]}}'

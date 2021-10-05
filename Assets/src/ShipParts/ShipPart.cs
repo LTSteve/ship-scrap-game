@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEditor;
+using UnityEngine.VFX;
 
 public class ShipPart : MonoBehaviour, ITreeNode
 {
@@ -32,12 +33,15 @@ public class ShipPart : MonoBehaviour, ITreeNode
 
     private Transform scrapPrefab;
 
+    private TemporaryEffect boomPrefab;
+
     private void Awake()
     {
         currentHealth = Health;
 
         buildPoints = transform.Find("connectionpoints");
         scrapPrefab = (Transform)Resources.Load("Scrap", typeof(Transform));
+        boomPrefab = (TemporaryEffect)Resources.Load("ShipBoom", typeof(TemporaryEffect));
     }
 
     public Transform GetNearestBuildPoint(Vector3 point)
@@ -117,6 +121,21 @@ public class ShipPart : MonoBehaviour, ITreeNode
         if (workingValue > 0)
         {
             _spawnScrap(0f, workingValue);
+        }
+
+        var explosion = Instantiate(boomPrefab, transform.position, Quaternion.identity);
+        explosion.OnDestroy = _onDestroy;
+
+        IEnumerator _onDestroy(GameObject go)
+        {
+            var visualeffect = go.GetComponent<VisualEffect>();
+
+            visualeffect.Stop();
+
+            while (visualeffect.aliveParticleCount > 0)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
         }
 
         Destroy(this.gameObject);
