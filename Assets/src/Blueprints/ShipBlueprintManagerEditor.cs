@@ -7,10 +7,9 @@ using System.Reflection;
 using System;
 
 [CustomEditor(typeof(ShipBlueprintManager))]
-[CanEditMultipleObjects]
 public class ShipBlueprintManagerEditor : Editor
 {
-    SerializedProperty BlueprintTJSON;
+    SerializedProperty BlueprintTJSON = null;
     SerializedProperty AutoSave;
 
     private bool recalculate = false;
@@ -24,7 +23,6 @@ public class ShipBlueprintManagerEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        //EditorGUILayout.PropertyField(BlueprintTJSON);
 
         if(((ShipBlueprintManager)target).BlueprintTJSON != null)
         {
@@ -63,6 +61,7 @@ public class ShipBlueprintManagerEditor : Editor
         {
             ((ShipBlueprintManager)target).RecalculateBlueprint();
             recalculate = false;
+            EditorUtility.SetDirty(target);
         }
     }
 

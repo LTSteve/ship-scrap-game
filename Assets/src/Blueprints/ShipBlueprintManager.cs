@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[ExecuteAlways]
 public class ShipBlueprintManager : MonoBehaviour
 {
     public TJSON BlueprintTJSON;
@@ -14,13 +13,18 @@ public class ShipBlueprintManager : MonoBehaviour
     private Transform modelParent;
     private ShipPart shipRoot;
 
-    private void Awake()
+    private void _init()
     {
-        modelParent = transform.Find("Model");
+        if(modelParent == null)
+        {
+            modelParent = transform.Find("Model");
+        }
     }
 
     public void SaveBlueprint()
     {
+        _init();
+
         if (shipRoot == null)
         {
             if (modelParent.childCount == 0)
@@ -55,6 +59,8 @@ public class ShipBlueprintManager : MonoBehaviour
 
     public void RecalculateBlueprint()
     {
+        _init();
+
         List<ShipPartModel> blueprint = null;
         try
         {
