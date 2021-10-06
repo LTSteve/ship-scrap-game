@@ -62,4 +62,5 @@ public class InputState
 
     public bool Fire1;
     public bool GyrosActive = true;
+    public bool IMSActive = true;
 }

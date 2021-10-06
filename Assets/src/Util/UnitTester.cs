@@ -59,4 +59,25 @@ public static class UnitTester
 
         return toReturn + ")";
     }
+
+    public static bool VectorTester(object expectedOutput, object output)
+    {
+        var outputVec = (Vector3)output;
+        var expectedOutputVec = (Vector3)expectedOutput;
+
+        return Mathf.Approximately(outputVec.x, expectedOutputVec.x) && Mathf.Approximately(outputVec.x, expectedOutputVec.x) && Mathf.Approximately(outputVec.x, expectedOutputVec.x);
+    }
+
+    public static bool VeryApproximateVectorTester(object expectedOutput, object output)
+    {
+        var outputVec = (Vector3)output;
+        var expectedOutputVec = (Vector3)expectedOutput;
+
+        return _approximately(outputVec.x, expectedOutputVec.x) && _approximately(outputVec.x, expectedOutputVec.x) && _approximately(outputVec.x, expectedOutputVec.x);
+    }
+
+    private static bool _approximately(float a, float b)
+    {
+        return a > (b - 0.1f) && a < (b + 0.1f);
+    }
 }

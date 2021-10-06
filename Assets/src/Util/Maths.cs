@@ -85,6 +85,15 @@ public static class Maths
         }
     }
 
+    public static Vector3 ZeroVectorOnAxis(Vector3 vector, Vector3 axis)
+    {
+        axis = axis.normalized;
+
+        var magnitudeOnAxis = vector.magnitude * Mathf.Cos(Mathf.Deg2Rad * Vector3.Angle(vector.normalized,axis));
+
+        return vector - (axis * magnitudeOnAxis);
+    }
+
     public static float ApplyDeadzone(float value, float deadzone)
     {
         deadzone = Mathf.Abs(deadzone);

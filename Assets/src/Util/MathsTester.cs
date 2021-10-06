@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public static class MathsTester
 {
+    [MenuItem("SteveTests/MathsTests")]
     public static void Run()
     {
         UnitTester.RunMyTests(typeof(MathsTester));
@@ -55,15 +57,19 @@ public static class MathsTester
 
     private static void _test_WorldDirectionToLocalDirection()
     {
-        UnitTester.Context(typeof(Maths), "WorldDirectionToLocalDirection", (output, expectedoutput) => {
-            var outputVec = (Vector3)output;
-            var expectedOutputVec = (Vector3)expectedoutput;
-
-            return Mathf.Approximately(outputVec.x, expectedOutputVec.x) && Mathf.Approximately(outputVec.x, expectedOutputVec.x) && Mathf.Approximately(outputVec.x, expectedOutputVec.x);
-        });
+        UnitTester.Context(typeof(Maths), "WorldDirectionToLocalDirection", UnitTester.VectorTester);
 
         UnitTester.Assert(new Vector3(1f, 0f, 0f), new Vector3(1f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
         UnitTester.Assert(new Vector3(1f, 0f, 0f), new Vector3(0f, 1f, 0f), Quaternion.Euler(0f, 0f, 90f));
         UnitTester.Assert(new Vector3(0f, 0f, 1f), new Vector3(0f, 0f, 1f), Quaternion.Euler(0f, 0f, 70f));
+    }
+
+    private static void _test_ZeroVectorOnAxis()
+    {
+        UnitTester.Context(typeof(Maths), "ZeroVectorOnAxis", UnitTester.VeryApproximateVectorTester);
+
+        UnitTester.Assert(new Vector3(0f, 0f, 0f), new Vector3(1f, 0f, 0f), new Vector3(10f, 0f, 0f));
+        UnitTester.Assert(new Vector3(0f, 1f, 0f), new Vector3(0f, 1f, 0f), new Vector3(1f, 0f, 0f));
+        UnitTester.Assert(new Vector3(0.5f, 1.25f, 1f), new Vector3(1f, 1f, 1f), new Vector3(1f, -0.5f, 0f));
     }
 }

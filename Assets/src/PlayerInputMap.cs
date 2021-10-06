@@ -49,6 +49,18 @@ public class PlayerInputMap : MonoBehaviour
         if (value.performed)
         {
             InputState.GyrosActive = !InputState.GyrosActive;
+
+            NotificationScroller.PushNotification(InputState.GyrosActive ? "Gyros Activated" : "Gyros Deactivated");
+        }
+    }
+
+    public void OnDpadDown(InputAction.CallbackContext value)
+    {
+        if(value.performed)
+        {
+            InputState.IMSActive = !InputState.IMSActive;
+
+            NotificationScroller.PushNotification(InputState.IMSActive ? "IMS Activated" : "IMS Deactivated");
         }
     }
 

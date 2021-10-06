@@ -27,7 +27,7 @@ namespace SteveD.TJSON
 
         private static string testString = "{\n\".OBJECTTYPE\": \"TJSONParser+farts\",\n\"Poot\": \"asdf\",\n\"Counts\": {\n\".LISTTYPE\":\"TJSONParser+butts\",\"Items\":[{\n\".OBJECTTYPE\": \"TJSONParser+butts\",\n\"butt\": 0.25\n}]\n},\n\"butt\": 0.5\n}";
 
-        [MenuItem("TJSONParserTestMenu/Test")]
+        [MenuItem("SteveTests/TJSONParserTest")]
         public static void Test()
         {
             var f = Parse(testString);

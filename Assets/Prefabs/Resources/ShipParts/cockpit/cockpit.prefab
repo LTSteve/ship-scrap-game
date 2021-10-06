@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 5564065946374508958}
   - component: {fileID: 9131048462017738440}
   - component: {fileID: 7590390901849555976}
+  - component: {fileID: -9160116745707101430}
   - component: {fileID: -5777183972284181914}
   m_Layer: 6
   m_Name: cockpit
@@ -167,6 +168,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxTorque: 100
   MaxEnergyDrain: 0.02
+  StabilizationDeadzone: 0.01
+--- !u!114 &-9160116745707101430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5564065946374508957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1850fea01b6605f4e94aad0bb2e8584c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxDrag: 0.5
+  MaxEnergyDrain: 0.05
   StabilizationDeadzone: 0.01
 --- !u!114 &-5777183972284181914
 MonoBehaviour:
